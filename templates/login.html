@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Maruthu Flowers</title>
+    <!-- Bootstrap CSS (Keep for layout and base components) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <!-- Optional: Link your custom CSS file if you prefer external styles -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"> -->
+    <style>
+        /* --- Black and Gold Theme --- */
+
+        :root {
+            --gold-color: #daa520; /* Goldenrod - A classic gold */
+            --dark-bg: #1a1a1a;    /* Very dark grey, almost black */
+            --container-bg: #2b2b2b; /* Slightly lighter dark grey */
+            --input-bg: #333333;     /* Dark input background */
+            --text-light: #e0e0e0;   /* Light grey text for readability */
+            --text-dark: #1a1a1a;    /* Dark text for contrast on gold */
+            --gold-hover: #b8860b;  /* Darker gold for hover effects */
+            --border-light: #444;   /* Subtle border color */
+        }
+
+        body {
+            background-color: var(--dark-bg); /* Dark background */
+            color: var(--text-light);         /* Default text light */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Nicer font */
+        }
+
+        .login-container {
+            max-width: 400px;
+            margin: 70px auto; /* More vertical margin */
+            padding: 40px;      /* More padding */
+            background-color: var(--container-bg);
+            border-radius: 10px; /* Slightly more rounded */
+            border: 1px solid var(--gold-color); /* Gold border */
+            box-shadow: 0 0 20px rgba(218, 165, 32, 0.3); /* Subtle gold glow */
+        }
+
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 35px;
+            color: var(--gold-color); /* Gold heading */
+            font-weight: bold;
+            text-transform: uppercase; /* Uppercase for style */
+            letter-spacing: 1px;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-light); /* Light label text */
+            margin-bottom: 8px; /* Spacing below label */
+        }
+
+        .form-control {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-light);
+            color: var(--text-light);
+            border-radius: 5px;
+            padding: 10px 12px; /* Adjust padding */
+        }
+
+        /* Remove default browser outline and use gold border/shadow on focus */
+        .form-control:focus {
+            background-color: #444; /* Slightly lighter on focus */
+            color: #fff;
+            border-color: var(--gold-color);
+            box-shadow: 0 0 8px rgba(218, 165, 32, 0.5); /* Gold glow on focus */
+            outline: none;
+        }
+
+        /* Style placeholder text */
+        .form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+          color: #aaa;
+          opacity: 1; /* Firefox */
+        }
+        .form-control:-ms-input-placeholder { /* Internet Explorer 10-11 */
+          color: #aaa;
+        }
+        .form-control::-ms-input-placeholder { /* Microsoft Edge */
+          color: #aaa;
+        }
+
+        .btn-login {
+             background-color: var(--gold-color);
+             border: 1px solid var(--gold-color);
+             color: var(--text-dark); /* Dark text on gold button */
+             width: 100%;
+             padding: 12px; /* Larger padding */
+             font-size: 1.1em;
+             font-weight: bold;
+             border-radius: 5px;
+             transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+             margin-top: 15px; /* Space above button */
+        }
+
+        .btn-login:hover {
+            background-color: var(--gold-hover);
+            border-color: var(--gold-hover);
+            color: #000; /* Keep text dark or make black on hover */
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px; /* More space above links */
+            font-size: 0.95em;
+        }
+
+        .register-link p {
+            margin-bottom: 10px; /* Space between links */
+            color: #ccc; /* Slightly brighter than default text */
+        }
+
+        .register-link a {
+            color: var(--gold-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #FFEC8B; /* Lighter gold on hover */
+            text-decoration: underline;
+        }
+
+        /* --- Alert Styles for Black/Gold Theme --- */
+        .alert {
+             margin-top: 20px;
+             border-width: 1px;
+             border-style: solid;
+             color: #e0e0e0;
+             border-radius: 5px;
+             padding: 12px 15px;
+        }
+        /* Make close button visible on dark alerts */
+        .alert .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%); /* Makes the default black 'X' white */
+        }
+
+        /* Danger Alert */
+        .alert-danger {
+            background-color: #4d1a1a; /* Darker red */
+            border-color: #dc3545; /* Standard red border */
+            color: #f8d7da; /* Light red text */
+        }
+        /* Success Alert */
+        .alert-success {
+            background-color: #1a4d2e; /* Darker green */
+            border-color: #28a745; /* Standard green border */
+            color: #d4edda; /* Light green text */
+        }
+        /* Warning Alert */
+        .alert-warning {
+            background-color: #664d03; /* Darker yellow/orange */
+            border-color: #ffc107; /* Standard warning border */
+            color: #fff3cd; /* Light yellow text */
+        }
+        /* Info Alert */
+        .alert-info {
+            background-color: #0c5460; /* Darker info blue */
+            border-color: #17a2b8; /* Standard info border */
+            color: #d1ecf1; /* Light blue text */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="login-container">
+            <h2>User Login</h2>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <!-- Ensure category matches Bootstrap alert classes (e.g., 'danger', 'success') -->
+                  <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+
+            <form method="POST" action="{{ url_for('login') }}">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" value="{{ username or '' }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <button type="submit" class="btn btn-login">Login</button>
+            </form>
+
+            <div class="register-link">
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+                 <p><a href="{{ url_for('main_div') }}">Back to Home</a></p>
+                 <p><a href="{{ url_for('admin_login') }}">Admin Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle JS (includes Popper) - Needed for dismissible alerts -->
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* --- Keep all your existing styles --- */
+
+        /* Statistics Container */
+        .statistics-container {
+            display: flex;
+            justify-content: space-around; /* Adjusted for potentially fewer cards */
+            gap: 20px; /* Reduced gap */
+            background-color: #f4f4f9;
+            padding: 20px; /* Added padding */
+            margin: 30px 0; /* Adjusted margin */
+            flex-wrap: wrap;
+            border-radius: 8px; /* Added subtle rounding */
+        }
+
+        /* Individual Stat Card Styling */
+        .stat-card {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Softer shadow */
+            padding: 20px;
+            flex: 1; /* Allow cards to grow/shrink */
+            min-width: 180px; /* Minimum width */
+            text-align: center;
+            transition: transform 0.2s ease; /* Add hover effect */
+        }
+        .stat-card:hover {
+             transform: translateY(-5px); /* Lift card on hover */
+        }
+
+        .stat-card h3 {
+            font-size: 1.1rem; /* Slightly smaller heading */
+            margin-bottom: 10px;
+            color: #555; /* Darker grey */
+            font-weight: 600;
+        }
+
+        .stat-card .stat-value {
+            font-size: 1.8rem; /* Slightly smaller value */
+            font-weight: bold;
+            color: #ff7e5f; /* Keep accent color */
+        }
+
+        /* Container for the charts */
+        .charts-container {
+            display: flex;
+            justify-content: space-around; /* Space out remaining charts */
+            gap: 30px;
+            margin: 40px 0; /* Adjusted margin */
+            flex-wrap: wrap; /* Allow wrapping */
+        }
+
+        /* Individual chart styling */
+        .chart {
+            flex-basis: 48%;
+            min-width: 300px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 15px; /* Adjusted padding */
+            background-color: #fff;
+            max-height: 400px; /* Set max height */
+        }
+        .chart canvas{
+            max-height: 350px; /* Ensure canvas fits */
+            width: 100% !important; /* Override potential inline styles */
+            height: auto !important;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+             .stat-card { min-width: 150px; }
+             .chart { flex-basis: 100%; margin-bottom: 20px; }
+        }
+
+        @media (max-width: 768px) {
+            .statistics-container { flex-direction: column; gap: 15px; }
+            .stat-card { width: 100%; min-width: unset; }
+            .charts-container { gap: 20px; }
+        }
+
+        /* Dynamic flash message styles */
+        .dynamic-flash-container { /* Added container */
+            width: 100%;
+            position: relative; /* Or sticky if needed */
+            z-index: 1001;
+        }
+        .dynamic-flash {
+            padding: 15px;
+            margin: 10px auto 15px; /* Adjusted margin */
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-align: center;
+            max-width: 90%; /* Adjusted width */
+            display: none; /* Hidden by default */
+        }
+        /* Flask flash message styles */
+        .flash-messages { padding: 0; list-style: none; margin: 0 0 20px 0; }
+        .alert { padding: 15px; margin-bottom: 10px; border: 1px solid transparent; border-radius: 4px; }
+        .alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
+        .alert-error { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
+        .alert-info { color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb; }
+        .alert-warning { color: #856404; background-color: #fff3cd; border-color: #ffeeba; }
+
+        /* Product image placeholder */
+        .product-image-placeholder {
+            width: 100%; height: 150px; background-color: #eee; display: flex;
+            align-items: center; justify-content: center; color: #aaa;
+            font-size: 0.9em; border-radius: 5px 5px 0 0;
+        }
+
+        /* Filter buttons styles */
+        .filter-buttons { margin-bottom: 15px; text-align: center; }
+        .filter-buttons .btn { margin: 0 5px; padding: 8px 15px; cursor: pointer; border: 1px solid #ddd; background-color: #f8f8f8; border-radius: 4px; transition: background-color 0.2s ease; }
+        .filter-buttons .btn:hover { background-color: #eee; }
+        .filter-buttons .btn.active { background-color: #ff7e5f; color: white; border-color: #ff7e5f; }
+
+        /* ** NEW STYLE for hiding rows ** */
+        .hidden-row {
+            display: none;
+        }
+
+        /* ** NEW STYLE for show more button container ** */
+        .show-more-container {
+             text-align: center;
+             margin-top: 20px; /* Add space above button */
+        }
+        /* You can reuse .btn style or add specific ones */
+        #show-more-orders-btn {
+            padding: 10px 20px;
+            background-color: #ff7e5f; /* Match theme */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s ease;
+        }
+         #show-more-orders-btn:hover {
+            background-color: #e66a4f; /* Darker shade on hover */
+        }
+
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1 class="title">MARUTHU FLOWERS Dashboard</h1>
+        <!-- Maybe add admin logout button here -->
+        <a href="{{ url_for('admin_logout') }}" style="position: absolute; top: 20px; right: 20px; color: white; text-decoration: none;">Logout Admin</a>
+    </header>
+    <main>
+        <!-- Dynamic Flash Message Area -->
+        <div class="dynamic-flash-container">
+             <div class="dynamic-flash"></div> <!-- Placeholder div -->
+        </div>
+
+        <!-- Flash Messages (from Flask) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for category, message in messages %}
+                <div class="alert alert-{{ 'error' if category == 'danger' else category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <!-- Statistics Section (Keep As Is) -->
+        <section class="statistics-section">
+             <h2 class="section-title">Key Statistics</h2>
+            <div class="statistics-container">
+                 <!-- Your Stat Cards Here -->
+                 <div class="stat-card">
+                    <h3>Money Earned Today</h3>
+                    <p class="stat-value">{{ chart_data.get('money_earned_today', 0) | round(2) }} INR</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Products Sold Today</h3>
+                    <p class="stat-value">{{ chart_data.get('products_sold_today', 0) }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Money Earned</h3>
+                    <p class="stat-value">{{ chart_data.get('money_earned', 0) | round(2) }} INR</p>
+                </div>
+                 <div class="stat-card">
+                    <h3>Orders Today</h3>
+                    <p class="stat-value">{{ chart_data.get('orders_today', 0) }}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Orders This Month</h3>
+                    <p class="stat-value">{{ chart_data.get('orders_this_month', 0) }}</p>
+                </div>
+                <!-- Add the other stats cards if needed -->
+                 <div class="stat-card"><h3>Total Users</h3><p class="stat-value">{{ chart_data.get('user_count', 0) }}</p></div>
+                 <div class="stat-card"><h3>Total Products</h3><p class="stat-value">{{ chart_data.get('product_count', 0) }}</p></div>
+                 <div class="stat-card"><h3>Total Orders</h3><p class="stat-value">{{ chart_data.get('order_count', 0) }}</p></div>
+                 <div class="stat-card"><h3>Total Reviews</h3><p class="stat-value">{{ chart_data.get('review_count', 0) }}</p></div>
+                 <div class="stat-card"><h3>Contact Msgs</h3><p class="stat-value">{{ chart_data.get('contact_count', 0) }}</p></div>
+            </div>
+        </section>
+
+        <!-- Charts Section (Keep As Is) -->
+        <section class="charts-section">
+             <h2 class="section-title">Visualizations</h2>
+            <div class="charts-container">
+                <div class="chart" id="ordersChartContainer">
+                     <h3 style="text-align: center; margin-bottom: 10px;">Orders Per Day</h3>
+                    <canvas id="ordersChart"></canvas>
+                </div>
+                <div class="chart" id="productChartContainer">
+                     <h3 style="text-align: center; margin-bottom: 10px;">Top 5 Sold Products</h3>
+                    <canvas id="productChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+         <!-- Manage Products Section (Keep As Is) -->
+         <section class="add-product">
+            <h2 class="section-title">Manage Products</h2>
+            <button class="add-btn" onclick="window.location.href='{{ url_for('up') }}'">+ Add Product</button>
+        </section>
+
+        <!-- Product Grid Section (Keep As Is) -->
+        <section class="product-section">
+            <div class="product-grid">
+                {% if not product_records %}
+                    <p>No products available.</p>
+                {% else %}
+                    {% for product in product_records %}
+                    <div class="product-card">
+                        {% if product.image_url %}
+                            <img src="{{ product.image_url }}" alt="{{ product.get('flower_name', 'Product Image') }}" class="product-image">
+                        {% else %}
+                             <div class="product-image-placeholder">No Image</div>
+                        {% endif %}
+                        <h3 class="product-name">{{ product.get('flower_name', 'N/A') }}</h3>
+                        <p class="product-price">₹{{ product.get('flower_price_formatted', product.get('flower_price', 'N/A')) }}</p> {# Use formatted if available #}
+                        <p class="product-des">{{ product.get('flower_description', '') }}</p>
+                        <div class="product-actions">
+                            <a href="{{ url_for('edit_product', product_id=product['_id']) }}" class="action-btn edit-btn">Edit</a>
+                            <form action="{{ url_for('delete_product', product_id=product['_id']) }}" method="POST" style="display: inline;">
+                                <button type="submit" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this product?');">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- Order Data Section (Modified) -->
+        <section class="order-section">
+            <h2 class="section-title">Order Data</h2>
+             <!-- Filtering buttons remain the same -->
+            <div class="filter-buttons">
+                <button id="filter-all" class="btn active">Show All</button>
+                <button id="filter-day" class="btn">Last 1 Day</button>
+                <button id="filter-week" class="btn">Last 1 Week</button>
+                <button id="filter-month" class="btn">Last 1 Month</button>
+            </div>
+            <div class="table-container">
+                <table id="order-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Customer Name</th>
+                            <th>Order Type</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Order Date</th>
+                            <th>Status</th>
+                            <th>Total Price (INR)</th> {# Added INR #}
+                        </tr>
+                    </thead>
+                    <tbody id="order-table-body"> {# Added ID to tbody #}
+                        {% if not order_records %}
+                            <tr><td colspan="11" style="text-align: center;">No orders found.</td></tr> {# Increased colspan #}
+                        {% else %}
+                            {% for record in order_records %}
+                            {# ** MODIFIED: Added 'order-row' class #}
+                            <tr class="order-row" data-date="{{ record.get('order_date_formatted', record.get('order_date', '')) }}" data-order-id="{{ record['_id'] }}">
+                                <td>{{ record._id }}</td>
+                                <td>{{ record.get('product_name', 'N/A') }}</td>
+                                <td>{{ record.get('quantity', 'N/A') }}</td>
+                                <td>{{ record.get('customer_name', 'N/A') }}</td>
+                                <td>{{ record.get('order_type', 'N/A') }}</td>
+                                <td>{{ record.get('customer_phone', 'N/A') }}</td>
+                                <td>{{ record.get('customer_email', 'N/A') }}</td>
+                                <td>{{ record.get('address', 'N/A') }}</td>
+                                <td>{{ record.get('order_date_formatted', record.get('order_date', 'N/A')) }}</td> {# Use formatted date #}
+                                <td>
+                                    <select class="status-dropdown" name="status" onchange="updateStatus(this)">
+                                        {% set current_status = record.get('status', 'Pending') %}
+                                        <option value="Pending" {% if current_status == "Pending" %}selected{% endif %}>Pending</option>
+                                        <option value="Processing" {% if current_status == 'Processing' %}selected{% endif %}>Processing</option>
+                                        <option value="Shipped" {% if current_status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                                        <option value="Delivered" {% if current_status == 'Delivered' %}selected{% endif %}>Delivered</option>
+                                        <option value="Cancelled" {% if current_status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                                    </select>
+                                </td>
+                                <td>{{ record.get('total_price_formatted', record.get('total_price', 'N/A')) }}</td> {# Use formatted price #}
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- ** NEW: Show More Button Container ** -->
+            <div class="show-more-container">
+                 <button id="show-more-orders-btn" class="btn" style="display: none;">Show More Orders</button>
+            </div>
+        </section>
+
+        <!-- Review Data Section (Keep As Is - or apply same logic if needed) -->
+        <section class="order-section"> {# Assuming same class is okay #}
+            <h2 class="section-title">Review Data</h2>
+            <div class="table-container">
+                <table id="review-table"> {# Changed ID to be specific #}
+                    <thead>
+                        <tr>
+                            <th>Date & Time</th>
+                            <th>Username</th> {# Added Username #}
+                            <th>Review</th>
+                            <th>Action</th> {# Changed Header #}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if not review_records %} {# Changed variable name to match python #}
+                            <tr><td colspan="4" style="text-align: center;">No Reviews found.</td></tr> {# Adjusted colspan #}
+                        {% else%}
+                            {% for record in review_records %} {# Changed variable name #}
+                            <tr data-review-id="{{ record['_id'] }}"> {# Changed data attribute #}
+                                <td>{{ record.get('submitted_at_formatted', record.get('submitted_at', 'N/A')) }}</td> {# Use formatted #}
+                                <td>{{ record.get('username', 'Anonymous') }}</td> {# Display username #}
+                                <td>{{ record.get('text', '') }}</td>
+                                <td>
+                                    <form action="{{ url_for('delete_review', review_id_str=record['_id']) }}" method="POST" style="display: inline;">
+                                        <button type="submit" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this review?');">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- Add Show More for reviews if desired, following the same pattern -->
+        </section>
+    </main>
+
+    <!-- Include External JS for Filtering (if you have one) -->
+    <!-- Make sure admin.js filtering logic doesn't interfere with the show more logic -->
+    <!-- It might be better to put filtering JS *after* the show more logic -->
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+
+    <!-- Inline JS for Charts, Status Updates, and Show More -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            // --- Chart Initialization ---
+            const chartData = {{ chart_data | tojson | safe }}; // Use 'safe' filter
+
+            // Orders per Day Chart
+            const ordersChartContainer = document.getElementById('ordersChartContainer');
+            const ordersChartCtx = document.getElementById('ordersChart')?.getContext('2d');
+            if (ordersChartCtx && chartData?.orders_per_day?.labels && chartData?.orders_per_day?.data) {
+                new Chart(ordersChartCtx, {
+                    type: 'line', data: { labels: chartData.orders_per_day.labels, datasets: [{ label: 'Orders per Day', data: chartData.orders_per_day.data, borderColor: '#ff7e5f', backgroundColor: 'rgba(255, 126, 95, 0.2)', fill: true, tension: 0.1 }] },
+                    options: { responsive: true, maintainAspectRatio: false }
+                });
+            } else {
+                console.warn("Orders per day chart data is missing or invalid.");
+                if (ordersChartContainer) ordersChartContainer.innerHTML = '<p style="text-align:center; color:orange;">Orders chart data unavailable or empty.</p>';
+            }
+
+            // Most Sold Products Chart
+            const productChartContainer = document.getElementById('productChartContainer');
+            const productChartCtx = document.getElementById('productChart')?.getContext('2d');
+            if (productChartCtx && chartData?.most_sold_products?.labels?.length > 0 && chartData?.most_sold_products?.data?.length > 0) { // Check for non-empty arrays
+                new Chart(productChartCtx, {
+                    type: 'bar', data: { labels: chartData.most_sold_products.labels, datasets: [{ label: 'Units Sold', data: chartData.most_sold_products.data, backgroundColor: '#feb47b', borderColor: '#fe9f5c', borderWidth: 1 }] },
+                    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, scales: { x: { beginAtZero: true } } }
+                });
+            } else {
+                console.warn("Most sold products chart data is missing or empty.");
+                if (productChartContainer) productChartContainer.innerHTML = '<p style="text-align:center; color:orange;">Products chart data unavailable or empty.</p>';
+            }
+
+            // --- Show More Orders Logic ---
+            const orderTableBody = document.getElementById('order-table-body');
+            const showMoreBtn = document.getElementById('show-more-orders-btn');
+            const rowsToShowInitially = 10;
+
+            if (orderTableBody && showMoreBtn) { // Ensure elements exist
+                const orderRows = orderTableBody.querySelectorAll('tr.order-row'); // Select only order rows
+                const totalRows = orderRows.length;
+
+                // Initially hide rows beyond the limit
+                for (let i = rowsToShowInitially; i < totalRows; i++) {
+                    if (orderRows[i]) { // Check if row exists at index
+                         orderRows[i].classList.add('hidden-row');
+                    }
+                }
+
+                // Show the button only if there are more rows than the initial limit
+                if (totalRows > rowsToShowInitially) {
+                    showMoreBtn.style.display = 'inline-block'; // Or 'block' depending on desired layout
+
+                    // Add click listener to the button
+                    showMoreBtn.addEventListener('click', function() {
+                        // Find all currently hidden rows and show them
+                        const hiddenRows = orderTableBody.querySelectorAll('tr.order-row.hidden-row');
+                        hiddenRows.forEach(row => {
+                            row.classList.remove('hidden-row');
+                        });
+
+                        // Hide the "Show More" button itself
+                        showMoreBtn.style.display = 'none';
+                    });
+                } else {
+                    // Ensure button is hidden if there are 10 or fewer rows
+                     showMoreBtn.style.display = 'none';
+                }
+            } else {
+                 console.warn("Order table body or show more button not found. 'Show More' functionality disabled.");
+            }
+
+        }); // End DOMContentLoaded
+
+        // --- Status Update Function (Keep As Is) ---
+        function updateStatus(dropdownElement) {
+            const newStatus = dropdownElement.value;
+            const tableRow = dropdownElement.closest('tr');
+            const orderId = tableRow?.dataset.orderId;
+
+            if (!orderId) {
+                console.error("Could not find order ID for status update.");
+                showFlashMessage("Error: Could not identify the order.", "error");
+                return;
+            }
+
+            console.log(`Updating order ${orderId} to status: ${newStatus}`);
+
+            const headers = { 'Content-Type': 'application/json' };
+            // Add CSRF token if you implement CSRF protection
+            // const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
+            // if (csrfTokenMeta) headers['X-CSRFToken'] = csrfTokenMeta.getAttribute('content');
+
+            fetch(`/update_order_status/${orderId}`, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({ status: newStatus }),
+            })
+            .then(response => {
+                 if (!response.ok) {
+                    return response.json().then(errData => {
+                         throw new Error(errData.message || `Server error: ${response.status}`);
+                    }).catch(() => {
+                         throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                    });
+                 }
+                 return response.json();
+            })
+            .then(data => {
+                console.log("Server response:", data);
+                showFlashMessage(data.message || 'Status updated successfully!', 'success');
+            })
+            .catch(error => {
+                console.error("Error updating status:", error);
+                showFlashMessage(`Failed to update status: ${error.message}`, 'error');
+                 // Consider reverting dropdown value here if needed
+            });
+        }
+
+        // --- Flash Message Display (Keep As Is) ---
+        function showFlashMessage(message, category) {
+            const container = document.querySelector('.dynamic-flash-container');
+            if (!container) { console.error("Flash container not found"); return; }
+
+            // Find or create the flash div *inside* the container
+            let flashDiv = container.querySelector('.dynamic-flash');
+            // if (!flashDiv) { // If using the single placeholder div, it should always exist
+            //     flashDiv = document.createElement('div');
+            //     flashDiv.className = 'dynamic-flash';
+            //     container.appendChild(flashDiv); // Append if creating dynamically
+            // }
+
+            if (flashDiv) { // Check if the placeholder div exists
+                flashDiv.textContent = message;
+                const alertCategory = (category === 'danger' ? 'error' : category);
+                flashDiv.className = `dynamic-flash alert alert-${alertCategory}`; // Reset classes
+                flashDiv.style.display = 'block';
+
+                setTimeout(() => {
+                    if (flashDiv) flashDiv.style.display = 'none';
+                }, 4000);
+            } else {
+                 console.error("Dynamic flash placeholder div not found within container.");
+            }
+        }
+
+    </script>
+
+</body>
+</html>

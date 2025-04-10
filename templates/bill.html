@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Receipt - {{ bill.store_name }}</title>
+    <!-- Link to a NEW CSS file for the impressive style -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bill.css') }}">
+    <!-- Basic print styles (can be expanded in the CSS file) -->
+    <style media="print">
+        body { margin: 0; background-color: #fff; color: #000; }
+        .bill-container { box-shadow: none; border: none; margin: 0; max-width: 100%; }
+        .print-button { display: none; } /* Hide print button when printing */
+        .bill-header, .bill-footer { border-color: #ccc; } /* Lighter borders for print */
+        /* Add any other print-specific adjustments */
+    </style>
+</head>
+<body>
+    <div class="bill-container">
+        <!-- Print Button -->
+        <button class="print-button" onclick="window.print()">
+            Print Receipt <span class="print-icon">🖨️</span>
+        </button>
+
+        <header class="bill-header">
+            <div class="store-details">
+                <!-- You can add a logo here if you have one -->
+                <!-- <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Store Logo" class="logo"> -->
+                <h1>{{ bill.store_name }}</h1>
+                <p>123 Flower Lane, Blossom City</p> <!-- Add your address -->
+                <p>Phone: (555) 123-4567</p> <!-- Add your phone -->
+            </div>
+            <div class="receipt-title">
+                <h2>Order Receipt</h2>
+            </div>
+        </header>
+
+        <section class="customer-order-info">
+            <div class="order-meta">
+                <h3>Order Information</h3>
+                <p><strong>Order ID:</strong> {{ bill.order_id }}</p>
+                <p><strong>Date:</strong> {{ bill.date }}</p>
+                <p><strong>Order Type:</strong> {{ bill.order_type }}</p>
+                 <!-- Display Address if Delivery -->
+                {% if bill.order_type == 'Delivery' and bill.address != 'N/A' %}
+                    <p><strong>Delivery Address:</strong> {{ bill.address }}</p>
+                {% endif %}
+            </div>
+            <div class="customer-meta">
+                <h3>Bill To</h3>
+                <p>{{ bill.customer_name }}</p>
+                <!-- Optionally add email/phone from 'bill' data if needed -->
+                <!-- <p>{{ bill.customer_email }}</p> -->
+            </div>
+        </section>
+
+        <section class="items-section">
+            <h3>Item Details</h3>
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th class="text-right">Quantity</th>
+                        <th class="text-right">Price per Item</th>
+                        <th class="text-right">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ bill.product_name }}</td>
+                        <td class="text-right">{{ bill.quantity }}</td>
+                        <!-- CORRECTED: Use the formatted price per unit -->
+                        <td class="text-right">₹{{ bill.price_per_unit_formatted }}</td>
+                        <!-- CORRECTED: Use the formatted total price -->
+                        <td class="text-right">₹{{ bill.total_price_formatted }}</td>
+                    </tr>
+                    <!-- If you ever support multiple items, add more <tr> here -->
+                </tbody>
+            </table>
+        </section>
+
+        <section class="totals-section">
+            <table class="totals-table">
+                <!-- Example: You could add subtotal, tax etc. if applicable -->
+                <!-- Subtotal calculation would require raw values if needed here -->
+                <tr class="grand-total">
+                    <td><strong>Grand Total:</strong></td>
+                    <!-- CORRECTED: Use the formatted total price -->
+                    <td class="text-right"><strong>₹{{ bill.total_price_formatted }}</strong></td>
+                </tr>
+            </table>
+        </section>
+
+        <footer class="bill-footer">
+            <p>{{ bill.thank_you }}</p>
+            <p>Questions? Contact us at {{ bill.store_name }} support.</p>
+        </footer>
+    </div>
+
+</body>
+</html>

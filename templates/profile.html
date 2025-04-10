@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Profile - Diet Tracker</title>
+    <!-- Include necessary CSS -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* --- Basic Dark Theme Variables --- */
+        :root {
+            --bg-color: #121212;
+            --card-bg-color: #1a1a1a;
+            --text-color: #e1e1e1;
+            --heading-color: #ffffff;
+            --accent-color: #4CAF50; /* Green accent for diet tracker */
+            --accent-darker: #45a049;
+            --border-color: #333333;
+            --subtle-text-color: #999999;
+        }
+        body, html {
+            background-color: var(--bg-color);
+            font-family: "Montserrat", sans-serif;
+            color: var(--text-color);
+            height: 100%;
+        }
+        h1, h2, h3 { color: var(--heading-color); font-weight: 700; }
+        a { color: var(--accent-color); text-decoration: none; }
+        a:hover { color: var(--accent-darker); }
+
+        .section-padding { padding: 60px 20px; min-height: 100vh; } /* Ensure it takes height */
+        .profile-card {
+            background-color: var(--card-bg-color);
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            max-width: 800px; /* Slightly wider */
+            margin: 40px auto;
+        }
+         .profile-card h2 {
+             color: var(--heading-color); /* White heading */
+             text-align: center;
+             margin-bottom: 35px;
+             text-transform: uppercase;
+             letter-spacing: 2px;
+             border-bottom: 1px solid var(--accent-color); /* Accent line */
+             padding-bottom: 15px;
+         }
+        .profile-section {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .profile-section:last-child {
+             border-bottom: none;
+             margin-bottom: 0;
+             padding-bottom: 0;
+        }
+        .profile-section h3 {
+             color: var(--accent-color); /* Accent color for section titles */
+             margin-bottom: 20px;
+             font-size: 1.5em;
+             letter-spacing: 1px;
+        }
+        .profile-info p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        .profile-info strong {
+            color: var(--heading-color);
+            margin-right: 10px;
+            display: inline-block;
+            min-width: 100px; /* Adjust as needed */
+        }
+        .profile-picture {
+            margin-bottom: 25px;
+        }
+        .profile-picture img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-color); /* Accent border */
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .profile-picture .default-icon {
+            font-size: 150px;
+            color: var(--subtle-text-color);
+            display: block;
+            text-align: center;
+        }
+
+        /* Form Styling */
+        label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .w3-input.w3-border {
+             background-color: var(--bg-color); /* Darker input bg */
+             border-color: var(--border-color) !important;
+             color: var(--text-color);
+             border-radius: 4px;
+        }
+         .w3-input.w3-border:focus {
+            border-color: var(--accent-color) !important;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Accent glow */
+            background-color: #2a2a2a; /* Slightly lighter focus */
+         }
+
+        .action-button {
+            background-color: var(--accent-color);
+            color: var(--heading-color); /* White text on accent */
+            border: none; padding: 10px 20px;
+            border-radius: 5px; cursor: pointer; transition: all 0.3s ease;
+            text-transform: uppercase; font-weight: 700; letter-spacing: 1px;
+            text-decoration: none; display: inline-block; margin-top: 10px;
+            text-align: center;
+        }
+        .action-button:hover {
+             background-color: var(--accent-darker);
+             transform: translateY(-2px);
+             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+         .action-button.w3-grey {
+            background-color: #616161; /* Grey button */
+         }
+         .action-button.w3-grey:hover {
+            background-color: #757575;
+         }
+
+         /* Flash Messages Styling (Optional) */
+         .flash-message {
+             padding: 15px;
+             margin-bottom: 20px;
+             border-radius: 4px;
+             color: #fff;
+             font-weight: bold;
+         }
+         .flash-success { background-color: #4CAF50; }
+         .flash-error { background-color: #f44336; }
+         .flash-info { background-color: #2196F3; }
+
+    </style>
+</head>
+<body>
+
+    <div class="w3-container section-padding">
+        <div class="profile-card w3-animate-opacity">
+            <h2><i class="fa fa-user-circle-o w3-margin-right"></i>My Profile</h2>
+
+            <!-- Display Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="flash-message {% if category == 'success' %}flash-success{% elif category == 'error' %}flash-error{% else %}flash-info{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Profile Info -->
+            <div class="profile-section">
+                <div class="profile-picture w3-margin-bottom w3-center">
+                    {% if photo_url %}
+                        <img src="{{ photo_url }}" alt="Profile Photo">
+                    {% else %}
+                        <i class="fa fa-user-circle-o default-icon"></i>
+                        <p style="color: var(--subtle-text-color); margin-top: 5px;">No photo uploaded</p>
+                    {% endif %}
+                </div>
+                 <div class="profile-info w3-center">
+                     <p style="font-size: 1.4em; color: var(--heading-color);"><strong>Username:</strong> {{ username }}</p>
+                     <!-- Do NOT display password/hash here -->
+                 </div>
+            </div>
+
+
+            <!-- Upload Photo Form -->
+            <div class="profile-section">
+                <h3>Update Profile Photo</h3>
+                <form action="{{ url_for('upload_photo') }}" method="post" enctype="multipart/form-data">
+                    <div class="w3-margin-bottom">
+                        <label for="photo"><i class="fa fa-photo w3-margin-right"></i>Choose New Photo:</label>
+                        <input type="file" id="photo" name="photo" class="w3-input w3-border" accept="image/*" required>
+                        <small style="color: var(--subtle-text-color);">Max file size: 5MB. Allowed types: jpg, png, gif.</small>
+                    </div>
+                    <button type="submit" class="action-button"><i class="fa fa-upload w3-margin-right"></i>Upload Photo</button>
+                </form>
+            </div>
+
+            <!-- Change Password Form -->
+            <div class="profile-section">
+                <h3>Change Password</h3>
+                <form action="{{ url_for('edit_password') }}" method="post">
+                    <div class="w3-margin-bottom">
+                        <label for="current_password"><i class="fa fa-lock w3-margin-right"></i>Current Password:</label>
+                        <input type="password" id="current_password" name="current_password" class="w3-input w3-border" placeholder="Enter your current password" required>
+                    </div>
+                    <div class="w3-margin-bottom">
+                        <label for="new_password"><i class="fa fa-key w3-margin-right"></i>New Password:</label>
+                        <input type="password" id="new_password" name="new_password" class="w3-input w3-border" placeholder="Enter your new password" required>
+                    </div>
+                    <!-- Optional: Add a confirmation field -->
+                    <!-- <div class="w3-margin-bottom">
+                        <label for="confirm_new_password"><i class="fa fa-key w3-margin-right"></i>Confirm New Password:</label>
+                        <input type="password" id="confirm_new_password" name="confirm_new_password" class="w3-input w3-border" placeholder="Confirm your new password" required>
+                    </div> -->
+                    <button type="submit" class="action-button"><i class="fa fa-save w3-margin-right"></i>Update Password</button>
+                </form>
+            </div>
+
+             <!-- Navigation -->
+             <div class="w3-center w3-margin-top">
+                <a href="{{ url_for('main_div') }}" class="action-button w3-grey"><i class="fa fa-home w3-margin-right"></i>Back to Home</a>
+                <a href="{{ url_for('logout') }}" class="action-button w3-red w3-margin-left"><i class="fa fa-sign-out w3-margin-right"></i>Logout</a>
+             </div>
+
+        </div> <!-- End profile-card -->
+    </div> <!-- End w3-container -->
+
+</body>
+</html>

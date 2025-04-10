@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+<style type="text/css">
+.bgimg-1 {
+  background-image: url("{{url_for('static',filename='1241682381442781294.webp')}}");
+  min-height: 100%;
+}
+</style>
+
+<body style="background-color: black">
+<div style="display: block;">
+	<div style="text-align: center; padding-top: 30px; padding-left: 20px; display: inline-block;">
+		<div style="opacity: 0.8; background-color: white; width: 900px; height: 400px; box-shadow: 0 5px 15px 3px rgba(0, 0, 0, 0.3); border-radius: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 10px; padding-top: 10px;">
+			<canvas id="myChart" style="padding-left: 10px; width:900px; height: 399px;"></canvas>
+		</div>
+	</div>
+
+	<div style="opacity: 0.8; text-align: center; padding-top: 30px; padding-left: 20px; display: inline-block;">
+		<div style="background-color: white; width: 900px; height: 400px; box-shadow: 0 5px 15px 3px rgba(0, 0, 0, 0.3); border-radius: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 15px; padding-top: 10px;">
+			<canvas id="lineChart" style="padding-left: 10px; width:900px; height: 399px;"></canvas>
+		</div>
+	</div>
+
+	<div style="opacity: 0.8; text-align: center; padding-top: 30px; padding-left: 20px; display: inline-block;">
+		<div style="background-color: white; width: 900px; height: 400px; box-shadow: 0 5px 15px 3px rgba(0, 0, 0, 0.3); border-radius: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 10px; padding-top: 10px;">
+			<canvas id="barChart" style="padding-left: 10px; width:900px; height: 399px;"></canvas>
+		</div>
+	</div>
+
+	<div style="opacity: 0.8; text-align: center; padding-top: 30px; padding-left: 20px; display: inline-block;">
+		<div style="background-color: white; width: 900px; height: 400px; box-shadow: 0 5px 15px 3px rgba(0, 0, 0, 0.3); border-radius: 10px; padding-bottom: 10px; padding-left: 5px; padding-right: 15px; padding-top: 10px;">
+			<canvas id="duoChart" style="padding-left: 10px; width:900px; height: 399px;"></canvas>
+		</div>
+	</div>
+</div>
+
+<script>
+var xValues = ["FLOWER_1", "FLOWER_2", "FLOWER_3", "FLOWER_4", "FLOWER_5"];
+var yValues = [55, 49, 44, 24, 50];
+var barColors = ["black", "black","black","black","black"];
+
+new Chart("myChart", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "FLOWER SALES"
+    }
+  }
+});
+</script>
+
+<script>
+const xValues__ = [100,200,300,400,500,600,700,800,900,1000];
+
+new Chart("duoChart", {
+  type: "line",
+  data: {
+    labels: xValues__,
+    datasets: [{ 
+      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+      borderColor: "#000000",
+      fill: false
+    }, { 
+      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
+      borderColor: "#585959",
+      fill: false
+    }, { 
+      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+      borderColor: "#757575",
+      fill: false
+    }]
+  },
+  options: {
+    legend: {display: false}
+  }
+});
+</script>
+
+<script>
+const xValues_ = [50,60,70,80,90,100,110,120,130,140,150];
+const yValues_ = [7,8,8,9,9,9,10,11,14,14,15];
+
+new Chart("lineChart", {
+  type: "line",
+  data: {
+    labels: xValues_,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "black",
+      borderColor: "balck",
+      data: yValues_
+    }]
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      yAxes: [{ticks: {min: 6, max:16}}],
+    }
+  }
+});
+</script>
+
+<script>
+var barColors = [
+  "#252626",
+  "#585959",
+  "#757575",
+  "#1c1a1a",
+  "#000000"
+];
+
+new Chart("barChart", {
+  type: "pie",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "FLOWER SALES"
+    }
+  }
+});
+</script>
+
+</body>
+</html>

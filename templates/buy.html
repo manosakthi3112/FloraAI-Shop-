@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy {{ product.get('flower_name', 'Product') }} - Maruthu Flowers</title>
+    <style>
+        /* --- Black and Gold Theme Variables --- */
+        :root {
+            --gold-color: #daa520; /* Goldenrod - A classic gold */
+            --dark-bg: #1a1a1a;    /* Very dark grey, almost black */
+            --container-bg: #2b2b2b; /* Slightly lighter dark grey */
+            --input-bg: #333333;     /* Dark input background */
+            --text-light: #e0e0e0;   /* Light grey text for readability */
+            --text-dark: #1a1a1a;    /* Dark text for contrast on gold */
+            --gold-hover: #b8860b;  /* Darker gold for hover effects */
+            --border-light: #444;   /* Subtle border color */
+            --border-gold: var(--gold-color); /* Explicit gold border */
+            --danger-bg: #4d1a1a; /* Dark red for errors */
+            --danger-border: #dc3545;
+            --danger-text: #f8d7da;
+            --success-bg: #1a4d2e; /* Dark green for success */
+            --success-border: #28a745;
+            --success-text: #d4edda;
+            --info-bg: #0c5460; /* Dark blue for info */
+            --info-border: #17a2b8;
+            --info-text: #d1ecf1;
+            --warning-bg: #664d03; /* Dark yellow for warning */
+            --warning-border: #ffc107;
+            --warning-text: #fff3cd;
+        }
+
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Consistent font */
+            margin: 0; padding: 0;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            scroll-behavior: smooth;
+        }
+
+        /* Full-Page Background Wrapper */
+        .formbold-main-wrapper {
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 40px 15px; /* Padding top/bottom and sides */
+            background-color: var(--dark-bg); /* Ensure dark background */
+            /* Optional: Add a subtle dark texture/pattern if desired */
+            /* background-image: url('path/to/dark_pattern.png'); */
+        }
+
+        /* Form Wrapper */
+        .formbold-form-wrapper {
+            background-color: var(--container-bg);
+            padding: 40px 50px;
+            border-radius: 10px;
+            border: 1px solid var(--border-gold); /* Gold border */
+            box-shadow: 0 0 15px rgba(218, 165, 32, 0.3); /* Gold glow */
+            max-width: 700px; width: 100%; /* Use 100% width up to max-width */
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+            margin: 20px 0; /* Vertical margin only */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 28px; /* Slightly adjusted size */
+            color: var(--gold-color); /* Gold heading */
+            font-weight: bold;
+            margin-bottom: 30px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* Label and Input Styles */
+        .formbold-form-label {
+            font-size: 16px; font-weight: 500; color: var(--text-light);
+            margin-bottom: 8px; margin-top: 18px; display: block;
+            text-align: left;
+        }
+
+        /* Style both input and select similarly */
+        .formbold-form-input,
+        select.formbold-form-input {
+            width: 100%; padding: 12px 15px; margin-bottom: 12px;
+            border-radius: 5px;
+            border: 1px solid var(--border-light);
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: var(--input-bg);
+            color: var(--text-light);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            font-family: inherit;
+            appearance: none; /* Allows custom styling for select */
+        }
+
+        /* Add custom arrow for select */
+        select.formbold-form-input {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23e0e0e0' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.9rem center;
+            background-size: 16px 12px;
+            padding-right: 2.5rem; /* Make space for arrow */
+        }
+
+        /* Focus state for inputs and selects */
+        .formbold-form-input:focus,
+        select.formbold-form-input:focus {
+            background-color: #444; /* Slightly lighter on focus */
+            border-color: var(--border-gold);
+            outline: none;
+            box-shadow: 0 0 8px rgba(218, 165, 32, 0.5); /* Gold glow on focus */
+        }
+
+        /* Readonly input style */
+        .formbold-form-input[readonly] {
+            background-color: #3a3a3a; /* Slightly different dark shade */
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .formbold-form-input[readonly]:focus {
+             box-shadow: none; /* No glow on readonly focus */
+             border-color: var(--border-light); /* Keep standard border */
+        }
+
+        /* Horizontal Rule */
+        hr {
+            margin: 30px 0;
+            border: 0;
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* Submit Button */
+        .formbold-btn {
+            background-color: var(--gold-color);
+            color: var(--text-dark); /* Dark text on gold button */
+            padding: 14px 30px;
+            font-size: 17px;
+            border: 1px solid var(--gold-color);
+            border-radius: 5px; /* Match input radius */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            text-transform: uppercase;
+            font-weight: bold;
+            width: 100%; max-width: 300px; display: block;
+            margin-left: auto; margin-right: auto;
+        }
+        .formbold-btn:hover {
+            background-color: var(--gold-hover);
+            border-color: var(--gold-hover);
+            color: #000; /* Ensure text stays dark/black */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(218, 165, 32, 0.2); /* Subtle gold shadow on hover */
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative; display: inline-block; cursor: help;
+            /* Style the (i) icon if needed */
+             color: var(--gold-color); /* Make icon gold */
+             font-weight: bold;
+             border-bottom: 1px dotted var(--gold-color); /* Dotted underline in gold */
+            font-size: 0.9em;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden; width: 170px;
+            background-color: #444; /* Dark background for tooltip */
+            color: var(--text-light); /* Light text */
+            text-align: center; border-radius: 6px; padding: 8px 10px;
+            position: absolute; z-index: 10; bottom: 145%; left: 50%;
+            margin-left: -85px; opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            font-size: 13px; font-weight: normal; line-height: 1.4;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        .tooltip .tooltiptext::after { /* Tooltip arrow */
+            content: ""; position: absolute; top: 100%; left: 50%;
+            margin-left: -5px; border-width: 5px; border-style: solid;
+            border-color: #444 transparent transparent transparent; /* Match tooltip bg */
+        }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
+
+        /* Flash Messages Styling (Dark Theme) */
+        ul.flashes {
+            list-style: none; padding: 0; margin: 0 0 25px 0;
+        }
+        ul.flashes li {
+            padding: 12px 20px; margin-bottom: 12px; border-radius: 5px;
+            text-align: left; font-size: 15px; border: 1px solid transparent;
+            display: flex; /* Use flexbox for alignment */
+            justify-content: space-between; /* Pushes button to the right */
+            align-items: center; /* Vertically centers content */
+        }
+         /* Optional: Add close button styling if you implement dismissible flashes */
+        ul.flashes li .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%); /* Makes Bootstrap 'X' white */
+            background-size: 0.75em;
+        }
+
+        ul.flashes li.success { background-color: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
+        ul.flashes li.error { background-color: var(--danger-bg); color: var(--danger-text); border-color: var(--danger-border); }
+        ul.flashes li.info { background-color: var(--info-bg); color: var(--info-text); border-color: var(--info-border); }
+        ul.flashes li.warning { background-color: var(--warning-bg); color: var(--warning-text); border-color: var(--warning-border); }
+
+        /* Progress Bar (Decorative) */
+        .progress-container {
+             margin: 40px auto 15px auto; background-color: var(--input-bg);
+             border-radius: 25px; width: 80%; max-width: 400px; height: 10px;
+             overflow: hidden; border: 1px solid var(--border-light);
+        }
+        .progress-bar {
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, var(--gold-hover), var(--gold-color)); /* Gold gradient */
+            border-radius: 25px; transition: width 0.5s ease-in-out;
+        }
+
+        /* Error Message Styling (for product not found) */
+        .product-error-message {
+            color: var(--danger-text); /* Use danger text color */
+            background-color: var(--danger-bg); /* Use danger background */
+            border: 1px solid var(--danger-border); /* Use danger border */
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .product-error-message p { margin: 0; }
+
+        /* Style the "Go Back Home" button in the error case */
+        .go-back-btn {
+            background-color: #555; /* Dark grey */
+            color: var(--text-light);
+            border-color: #666;
+        }
+        .go-back-btn:hover {
+            background-color: #666;
+             border-color: #777;
+             color: #fff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+             .formbold-form-wrapper { padding: 30px 30px; }
+        }
+        @media (max-width: 600px) {
+            .formbold-form-wrapper { padding: 30px 20px; }
+            .formbold-btn { padding: 14px 25px; font-size: 16px; }
+            .formbold-form-input, select.formbold-form-input { padding: 11px 12px; font-size: 15px; }
+             select.formbold-form-input { padding-right: 2rem; } /* Ensure arrow space */
+            h2 { font-size: 24px; margin-bottom: 25px;}
+            .formbold-form-label { font-size: 15px; margin-top: 15px; }
+            ul.flashes li { padding: 10px 15px; font-size: 14px; }
+        }
+    </style>
+    <script>
+        // Function to update the total price based on quantity and base price
+        function updateTotalPrice() {
+            const quantityInput = document.getElementById("quantity");
+            const totalPriceInput = document.getElementById("total-price");
+
+            // Ensure quantity is a valid positive number, default to 1
+            let quantity = parseInt(quantityInput.value) || 1;
+            if (quantity < 1) {
+                quantity = 1;
+                quantityInput.value = 1; // Correct the input field value as well
+            }
+
+            // Get the base price stored in the data-price attribute
+            const price = parseFloat(quantityInput.getAttribute('data-price')) || 0;
+            const totalPrice = quantity * price;
+
+            // Update the readonly total price field, formatted to 2 decimal places
+            totalPriceInput.value = totalPrice.toFixed(2);
+        }
+
+        // Function to show/hide the address input based on order type
+        function toggleDetails() {
+            const orderType = document.getElementById("orderType").value;
+            const detailsContainer = document.getElementById("detailsContainer");
+            const addressInput = document.getElementById("address");
+
+            if (orderType === "delivery") {
+                detailsContainer.style.display = "block"; // Show the address section
+                addressInput.setAttribute("required", "true"); // Make address required
+            } else { // pickup
+                detailsContainer.style.display = "none"; // Hide the address section
+                addressInput.removeAttribute("required"); // Address is not required
+                addressInput.value = ""; // Clear the address value if switching to pickup
+            }
+        }
+
+        // Run initial setup when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const quantityInput = document.getElementById("quantity");
+            // Set default quantity to 1 if it's empty or invalid on load
+            if (!quantityInput.value || parseInt(quantityInput.value) < 1) {
+                 quantityInput.value = '1';
+            }
+            updateTotalPrice(); // Calculate initial total price
+            toggleDetails();    // Set initial visibility of address section based on default select value
+        });
+
+
+        // Basic Client-Side Validation on Submit (optional, complements server-side)
+        document.addEventListener('submit', function(event) {
+            const form = event.target; // The form being submitted
+
+            // Phone number validation (using HTML pattern is primary, this is a fallback/enhancement)
+            const phoneInput = form.querySelector("#phone");
+            const phonePattern = /^[0-9]{10}$/; // Simple 10-digit check
+            if (phoneInput.value && !phonePattern.test(phoneInput.value)) {
+                alert("Please enter a valid 10-digit phone number (e.g., 1234567890).");
+                phoneInput.focus(); // Bring focus to the invalid field
+                event.preventDefault(); // Stop form submission
+                return; // Exit handler
+            }
+
+            // Address validation only if delivery is selected
+            const orderType = form.querySelector("#orderType").value;
+            const addressInput = form.querySelector("#address");
+            if (orderType === "delivery" && !addressInput.value.trim()) {
+                alert("Delivery address is required when 'Delivery' is selected.");
+                 addressInput.focus(); // Bring focus to the invalid field
+                event.preventDefault(); // Stop form submission
+                return; // Exit handler
+            }
+        });
+
+    </script>
+</head>
+<body>
+    <div class="formbold-main-wrapper">
+        <div class="formbold-form-wrapper">
+
+            <!-- Display Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">
+                           {{ message }}
+                           {# Optional: Add dismiss button if using Bootstrap JS #}
+                           {# <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> #}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+            {# Display specific error passed back from /submit if validation fails there #}
+            {% if error %}
+                <ul class="flashes"><li class="error">{{ error }}</li></ul>
+            {% endif %}
+
+            {# --- Main Product Form (only if product data exists) --- #}
+            {% if product and product.get('_id') %}
+
+            <h2>Purchase: {{ product.get('flower_name', 'Item') }}</h2>
+
+            <form method="post" action="{{ url_for('submit') }}">
+                {# Hidden inputs to pass essential data not directly entered by user #}
+                <input type="hidden" name="product_id" value="{{ product['_id'] | string }}">
+                {# --- THIS WAS THE MISSING FIELD --- #}
+                <input type="hidden" name="product" value="{{ product.get('flower_name', '') }}">
+
+                <!-- Product Details (Readonly) -->
+                <label for="product-name" class="formbold-form-label">Product Name</label>
+                <input
+                    type="text" id="product-name" name="product_name_display" {# Name isn't strictly needed for submit #}
+                    class="formbold-form-input" value="{{ product.get('flower_name', '') }}" readonly
+                 />
+
+                {# Prepare base price - ensure it's a float for JS #}
+                {% set base_price = product.get('flower_price_float', 0.0) %}
+
+                <label for="quantity" class="formbold-form-label">
+                    Quantity
+                    <span class="tooltip">(i)<span class="tooltiptext">How many units? Must be 1 or more.</span></span>
+                </label>
+                <input
+                    type="number" id="quantity" name="quan" class="formbold-form-input"
+                    value="{{ submitted_data.get('quan', '1') }}" {# Repopulate on error #}
+                    min="1" step="1" required
+                    onchange="updateTotalPrice()" oninput="updateTotalPrice()"
+                    data-price="{{ base_price }}" {# Pass clean float price to JS #}
+                 />
+
+                <label for="total-price" class="formbold-form-label">Total Price</label>
+                <input
+                    type="text" id="total-price" name="total_price_display" {# Name isn't needed for submit #}
+                    class="formbold-form-input"
+                    value="" readonly {# Value set by JS #}
+                />
+
+                <hr>
+
+                <!-- Order Options -->
+                <label for="orderType" class="formbold-form-label">Order Type</label>
+                <select id="orderType" name="order_type" class="formbold-form-input" onchange="toggleDetails()">
+                    <option value="pickup" {% if submitted_data.get('order_type', 'pickup') == 'pickup' %}selected{% endif %}>Pickup</option>
+                    <option value="delivery" {% if submitted_data.get('order_type') == 'delivery' %}selected{% endif %}>Delivery</option>
+                </select>
+
+                <!-- Dynamic Address Section (Shown only for Delivery) -->
+                <div id="detailsContainer" style="display: none;"> {/* Initial visibility set by JS */}
+                    <label for="address" class="formbold-form-label">Delivery Address</label>
+                    <input type="text" id="address" name="address" placeholder="Enter street, city, ZIP" class="formbold-form-input"
+                           value="{{ submitted_data.get('address', '') }}" {# Repopulate on error #}
+                           {# 'required' attribute is added/removed by JS #}
+                           >
+                </div>
+
+                <hr>
+
+                <!-- Customer Details -->
+                <label for="name" class="formbold-form-label">Full Name</label>
+                <input
+                    type="text" id="name" name="name" class="formbold-form-input" required
+                    value="{{ submitted_data.get('name', '') }}" {# Repopulate on error #}
+                    autocomplete="name"
+                />
+
+                <label for="phone" class="formbold-form-label">
+                    Phone Number
+                     <span class="tooltip">(i)<span class="tooltiptext">10 digits required (e.g., 1234567890). No spaces or dashes.</span></span>
+                </label>
+                <input
+                    type="tel" id="phone" name="phone" class="formbold-form-input" required
+                    value="{{ submitted_data.get('phone', '') }}" {# Repopulate on error #}
+                    pattern="[0-9]{10}" title="Please enter a 10-digit phone number (numbers only)"
+                    autocomplete="tel"
+                 />
+
+                <label for="email" class="formbold-form-label">Email Address</label>
+                <input
+                    type="email" id="email" name="email" class="formbold-form-input" required
+                    value="{{ submitted_data.get('email', '') }}" {# Repopulate on error #}
+                    autocomplete="email"
+                 />
+
+                <button type="submit" class="formbold-btn">Confirm Purchase</button>
+
+                <!-- Decorative Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+
+            </form> {# End of form #}
+
+            {% else %}
+                {# --- Message shown if product data failed to load --- #}
+                 <h2>Product Unavailable</h2>
+                 <div class="product-error-message">
+                    <p>
+                       We're sorry, but the details for the selected product could not be loaded.
+                       It might be unavailable or the link may be incorrect.
+                    </p>
+                 </div>
+                 {# Button to go back #}
+                <a href="{{ url_for('main_div') }}" class="formbold-btn go-back-btn" style="max-width: 250px;">Return to Products</a>
+            {% endif %} {# End of product availability check #}
+
+        </div> {# End of formbold-form-wrapper #}
+    </div> {# End of formbold-main-wrapper #}
+
+</body>
+</html>

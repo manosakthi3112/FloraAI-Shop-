@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maruthu Flowers</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+    /* --- Cool Dark Theme with Gold Accent --- */
+    :root {
+        --bg-color: #121212;         /* Near Black */
+        --card-bg-color: #1a1a1a;    /* Very Dark Grey for cards/sections */
+        --section-bg-alt: #161616;   /* Slightly different dark for alternation */
+        --text-color: #e1e1e1;       /* Light Grey/Off-white text */
+        --heading-color: #ffffff;    /* White headings */
+        --accent-color: #cca43b;     /* Gold accent */
+        --accent-darker: #b89134;    /* Darker Gold for hover */
+        --subtle-text-color: #999999; /* Medium Grey for less important text */
+        --border-color: #333333;     /* Dark Grey border */
+        --footer-bg: #0a0a0a;       /* Even darker footer */
+        --navbar-bg: rgba(18, 18, 18, 0.85); /* Semi-transparent dark */
+        --navbar-scroll-bg: rgba(18, 18, 18, 0.98); /* More opaque on scroll */
+        --button-text-dark: #121212; /* Dark text for gold buttons */
+    }
+
+    body, h1, h2, h3, h4, h5, h6, p, button, a, input, textarea, label { /* Added label */
+        font-family: "Montserrat", sans-serif;
+        color: var(--text-color);
+    }
+    h1, h2, h3 {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 700;
+        color: var(--heading-color);
+        margin-bottom: 0.75em; /* Consistent bottom margin */
+    }
+    h1 { font-size: 3.5em; letter-spacing: 1px;} /* Adjusted Hero H1 size */
+    h2.section-title { font-size: 2.8em; letter-spacing: 3px; } /* Adjusted Section Title size */
+    h3 { font-size: 1.5em; }
+
+    body, html {
+        height: 100%;
+        background-color: var(--bg-color);
+        line-height: 1.8;
+        scroll-behavior: smooth;
+    }
+
+    /* --- Utility Classes --- */
+    .section-padding { padding: 100px 20px; }
+    /* Applying max-width and centering content within sections */
+    .w3-content { max-width: 1200px; margin-left: auto; margin-right: auto; }
+
+    /* --- Backgrounds & Overlays --- */
+    .bgimg-1, .bgimg-3 {
+        background-attachment: fixed; background-position: center;
+        background-repeat: no-repeat; background-size: cover; position: relative;
+    }
+    .bgimg-1::before, .bgimg-3::before {
+        content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.75)); /* Slightly adjusted gradient */
+        z-index: 1;
+    }
+    .bgimg-1 > *, .bgimg-3 > * { position: relative; z-index: 2; }
+
+    .bgimg-1 {
+        background-image: url("{{ url_for('static', filename='flower_shop_hero_dark_moody.jpg') }}");
+        min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
+    .bgimg-3 {
+        background-image: url("{{ url_for('static', filename='contact_background_dark.jpg') }}");
+        min-height: 400px; /* Slightly reduced height */
+    }
+    .w3-wide { letter-spacing: 8px; }
+
+    /* Section Alternating Backgrounds */
+    #products, #services, #contact { background-color: var(--bg-color); }
+    #portfolio, #testimonials { background-color: var(--section-bg-alt); } /* Use slightly different dark */
+
+    @media only screen and (max-device-width: 1024px) {
+        .bgimg-1, .bgimg-3 { background-attachment: scroll; min-height: 400px; }
+        .bgimg-1 { min-height: 75vh; }
+        h1 { font-size: 2.8em; }
+        h2.section-title { font-size: 2.2em; }
+    }
+
+    /* --- Titles & Subtitles --- */
+    .section-title {
+        text-align: center; margin-bottom: 25px; /* Adjusted margin */
+        text-transform: uppercase;
+    }
+    .section-subtitle {
+        text-align: center; font-size: 1.15em; margin-bottom: 80px; /* Increased margin */
+        color: var(--subtle-text-color); max-width: 700px; margin-left: auto; margin-right: auto;
+        line-height: 1.7;
+    }
+
+    /* --- Navbar Styling --- */
+    .custom-navbar {
+        background-color: var(--navbar-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2); /* Subtle shadow */
+    }
+    .custom-navbar .w3-bar-item {
+        padding: 15px 25px; /* Increased padding */
+        letter-spacing: 1.8px; /* Increased spacing */
+        transition: background-color 0.3s ease, color 0.3s ease;
+        color: var(--text-color);
+        text-transform: uppercase;
+         font-weight: 500;
+         font-size: 0.9em;
+    }
+    .custom-navbar .w3-button:hover, #navDemo .w3-button:hover {
+        background-color: var(--accent-color);
+        color: var(--button-text-dark); /* Use dark text on gold */
+    }
+    .custom-navbar .w3-right .w3-button:hover { /* Search/Auth buttons */
+         background-color: var(--accent-darker);
+         color: var(--button-text-dark);
+    }
+    #navDemo { /* Mobile menu background */
+        background-color: var(--card-bg-color);
+    }
+
+    /* --- Buttons (Consistent Styling) --- */
+    .gold-button {
+        background: linear-gradient(to right, var(--accent-darker), var(--accent-color));
+        color: var(--button-text-dark) !important; /* Ensure dark text */
+        border: none; padding: 14px 35px; border-radius: 6px; cursor: pointer;
+        transition: all 0.3s ease; text-transform: uppercase; font-weight: 700;
+        letter-spacing: 1.5px;
+        box-shadow: 0 5px 15px rgba(204, 164, 59, 0.25);
+        display: inline-block; /* Important for alignment */
+        text-decoration: none; /* For anchor tags styled as buttons */
+    }
+    .gold-button:hover {
+        background: linear-gradient(to right, var(--accent-color), var(--accent-darker));
+        transform: translateY(-3px) scale(1.03); /* Subtle lift and scale */
+        box-shadow: 0 8px 20px rgba(204, 164, 59, 0.4);
+        color: var(--button-text-dark) !important;
+    }
+    .gold-button .fa { margin-right: 8px; } /* Space for icon */
+
+    /* --- Hero Section --- */
+    .hero-content { text-align: center; padding: 20px; }
+    .hero-title {
+        font-family: 'Playfair Display', serif;
+        letter-spacing: 1px; margin-bottom: 20px;
+        text-shadow: 2px 2px 15px rgba(0,0,0,0.8);
+    }
+    .hero-subtitle {
+        letter-spacing: 3px; text-transform: uppercase; font-weight: 400;
+        text-shadow: 1px 1px 8px rgba(0,0,0,0.7);
+        margin-bottom: 40px; /* Space before button */
+    }
+    .hero-cta { margin-top: 30px; /* Ensure space if needed */ }
+
+
+    /* --- Product & Portfolio Card Styling --- */
+    .item-column { padding: 15px; } /* More padding */
+    .item-card, .portfolio-card { /* Apply base styles to both */
+        background-color: var(--card-bg-color); border-radius: 6px;
+        overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        transition: transform 0.35s ease-out, box-shadow 0.35s ease-out, border-color 0.35s ease-out, border-top-color 0.35s ease-out;
+        display: flex; flex-direction: column; height: 100%;
+        border: 1px solid var(--border-color);
+        border-top: 4px solid transparent; /* Initial transparent top border */
+    }
+    .item-card:hover, .portfolio-card:hover {
+        transform: translateY(-12px); /* Keep lift, remove scale for less jumpiness */
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+        border-color: var(--accent-color);
+        border-top-color: var(--accent-color); /* Gold top border on hover */
+    }
+    .item-card img, .portfolio-card .portfolio-image-container img { /* Image styling */
+        width: 100%; height: 300px; /* Slightly reduced fixed height */
+        object-fit: cover; display: block;
+        filter: brightness(0.9); /* Slightly darker images */
+        transition: filter 0.4s ease;
+    }
+    .item-card:hover img, .portfolio-card:hover .portfolio-image-container img {
+        filter: brightness(1); /* Full brightness on hover */
+    }
+
+    /* Product Specific Card Info */
+    .item-info { padding: 30px; flex-grow: 1; display: flex; flex-direction: column; text-align: center; }
+    .item-info h3 { margin-top: 0; margin-bottom: 12px; font-size: 1.4em; }
+    .item-info .price {
+        font-weight: 700; color: var(--accent-color); margin-bottom: 15px;
+        font-size: 1.3em; letter-spacing: 1px;
+    }
+     .item-info .description {
+        color: var(--subtle-text-color); font-size: 0.95em; /* Slightly larger */
+        margin-bottom: 25px;
+        flex-grow: 1; /* Pushes button down */
+    }
+    .item-info .w3-button { /* Use the gold button style */
+        /* Inherits .gold-button styles */
+        width: 100%; margin-top: auto; /* Pushes button to bottom */
+    }
+
+    /* Portfolio specific styles */
+    .portfolio-card { border-top-color: transparent; } /* Override initial top border for portfolio */
+    .portfolio-image-container {
+        position: relative; height: 300px; /* Match product image height */
+        overflow: hidden;
+        /* No border needed here, card has it */
+    }
+     .portfolio-overlay {
+         position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+         opacity: 0; transition: opacity 0.5s ease; background-color: rgba(0,0,0, 0.75); /* Darker overlay */
+         display: flex; flex-direction: column; align-items: center; justify-content: center;
+         color: white; text-align: center; padding: 20px; font-size: 1.1em; /* Adjusted size */
+     }
+     .portfolio-overlay span { font-weight: 500; margin-bottom: 15px; }
+     .portfolio-overlay .fa {
+        font-size: 2.5em; margin-top: 10px; color: var(--accent-color);
+        transition: transform 0.3s ease;
+     }
+     .portfolio-card:hover .portfolio-overlay { opacity: 1; }
+     .portfolio-card:hover .portfolio-overlay .fa { transform: scale(1.1); }
+
+    /* Gallery Button */
+    .gallery-button-container { text-align: center; padding-top: 40px; }
+
+
+    /* --- Services Section Styling --- */
+    .service-item {
+        background-color: transparent; /* Keep transparent */
+        padding: 40px 30px; border-radius: 6px; text-align: center;
+        transition: background-color 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+        height: 100%;
+        border: 1px solid var(--border-color); /* Subtle border always visible */
+        display: flex; flex-direction: column; align-items: center;
+    }
+     .service-item:hover {
+         background-color: var(--card-bg-color);
+         border-color: var(--accent-color);
+         transform: translateY(-8px); /* Subtle lift on hover */
+      }
+    .service-item .fa {
+        font-size: 3.8em; color: var(--accent-color); margin-bottom: 30px;
+        transition: transform 0.3s ease;
+    }
+    .service-item:hover .fa { transform: scale(1.1); }
+    .service-item h3 {
+        color: var(--heading-color); margin-bottom: 15px;
+        text-transform: uppercase; letter-spacing: 1.5px; font-size: 1.2em;
+    }
+    .service-item p { color: var(--subtle-text-color); font-size: 0.95em; }
+
+     /* --- Testimonial Styling --- */
+    .testimonial {
+        background-color: var(--card-bg-color);
+        border-left: 5px solid var(--accent-color);
+        padding: 35px 45px 35px 65px; /* Increased padding, especially left */
+        margin-bottom: 40px;
+        color: var(--text-color);
+        border-radius: 6px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        position: relative; /* For quote icon */
+        font-style: italic;
+        font-size: 1.05em;
+    }
+    /* Adding quote icon */
+    .testimonial::before {
+        content: "\f10d"; /* Font Awesome quote-left icon */
+        font-family: FontAwesome;
+        font-size: 2.5em;
+        color: var(--accent-color);
+        opacity: 0.3;
+        position: absolute;
+        left: 20px;
+        top: 25px;
+        font-style: normal;
+    }
+
+    .testimonial .author {
+        text-align: right; font-weight: 700; color: var(--heading-color);
+        font-style: normal; margin-top: 20px; text-transform: uppercase;
+        letter-spacing: 1.5px; font-size: 0.9em;
+    }
+    .testimonial .author::before {
+        content: "— "; /* Em dash before author */
+        color: var(--subtle-text-color);
+    }
+
+    /* Review Form Styling Integration */
+    /* Container style adjusted to fit the section */
+    .review-section-container {
+        background-color: var(--section-bg-alt); /* Matches testimonials section bg */
+        padding: 80px 20px; /* Consistent padding */
+    }
+    .review-container {
+        display: flex; flex-direction: column; align-items: center; gap: 20px;
+        padding: 40px; /* Adjusted padding */
+        background-color: var(--card-bg-color); /* Darker card background */
+        border-radius: 8px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+        width: 100%; /* Take width of content area */
+        max-width: 700px; /* Max width for the form */
+        margin: 0 auto; /* Center within the content area */
+        border: 1px solid var(--border-color);
+    }
+    /* Your existing form styles (keeping the yellow as provided) */
+    .formbold-form-label {
+        display: block; color: #ffeb3b; font-size: 1.3rem; /* Slightly larger */
+        font-weight: bold; margin-bottom: 15px; text-align: center;
+        text-transform: uppercase; letter-spacing: 1px;
+    }
+    .formbold-form-input {
+        width: 100%; padding: 15px; border: 2px solid #ffeb3b; border-radius: 6px;
+        background-color: #1f1f1f; /* Slightly lighter dark */
+        color: #f0f0f0; font-size: 1rem; box-sizing: border-box;
+        transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .formbold-form-input:focus {
+        outline: none; border-color: #ffd700;
+        box-shadow: 0 0 10px rgba(255, 235, 59, 0.6); /* Adjusted glow */
+    }
+    .submit-button-container {
+        width: 100%; display: flex; justify-content: center; margin-top: 15px; /* Added margin-top */
+    }
+    .submit-button {
+        background-color: #ffeb3b; color: #181818; border: none;
+        padding: 12px 35px; /* Matched gold button horizontal padding */
+        border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer;
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out, transform 0.2s ease-in-out, box-shadow 0.2s ease;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4); text-transform: uppercase; letter-spacing: 1px;
+    }
+    .submit-button:hover {
+        background-color: #ffd700; color: #000;
+        transform: scale(1.05); box-shadow: 0 5px 12px rgba(0, 0, 0, 0.5);
+    }
+    .submit-button:active {
+        transform: scale(0.98); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+
+     /* --- Contact Form Styling --- */
+    #contact .w3-panel { padding: 0 16px; } /* Override panel padding */
+    #contact input.w3-input, #contact textarea.w3-input {
+        background-color: var(--card-bg-color); border: 1px solid var(--border-color);
+        color: var(--text-color); border-radius: 6px; padding: 14px; /* Increased padding */
+        transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    #contact input.w3-input:focus, #contact textarea.w3-input:focus {
+        border-color: var(--accent-color); background-color: #252525; /* Lighter focus */
+        box-shadow: 0 0 8px rgba(204, 164, 59, 0.4);
+        outline: none; /* Remove default outline */
+    }
+    #contact ::placeholder { color: #777; opacity: 1; }
+    #contact .w3-padding-small { padding: 0 8px !important; } /* Fine-tune padding */
+
+    .contact-info-container { padding-left: 20px; } /* Space for contact info column */
+    .contact-info .fa { color: var(--accent-color); margin-right: 20px; width: 25px; text-align: center; }
+    .contact-info p { display: flex; align-items: center; margin-bottom: 18px; font-size: 1.05em;} /* Align icon and text */
+
+    .contact-social-icons { margin-top: 35px; text-align: left; }
+    .contact-social-icons a {
+        color: var(--subtle-text-color); margin-right: 22px; font-size: 2.1em; /* Larger icons */
+        transition: color 0.3s ease, transform 0.3s ease; display: inline-block;
+    }
+    .contact-social-icons a:hover { color: var(--accent-color); transform: translateY(-3px); }
+
+    #contact .contact-form-button { /* Target contact button specifically */
+        /* Inherits .gold-button styles */
+        float: right; /* Keep it right aligned */
+    }
+
+    /* --- Footer Styling --- */
+    .custom-footer {
+        background-color: var(--footer-bg); color: var(--subtle-text-color);
+        padding: 60px 20px; /* Increased padding */
+        border-top: 1px solid var(--border-color);
+    }
+    .custom-footer .w3-button { /* Back to top button */
+        background-color: var(--accent-color); color: var(--button-text-dark);
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        padding: 12px 25px; border-radius: 6px; font-weight: 500;
+    }
+     .custom-footer .w3-button:hover {
+         background-color: var(--accent-darker);
+         transform: translateY(-3px);
+     }
+    .custom-footer .w3-xlarge .fa { /* Social icons */
+        margin: 0 15px; /* Increased spacing */
+        transition: color 0.3s ease, transform 0.3s ease;
+        color: var(--subtle-text-color); font-size: 1.2em; /* Slightly smaller */
+    }
+    .custom-footer .w3-xlarge .fa:hover { color: var(--accent-color); transform: scale(1.2) rotate(5deg); }
+    .custom-footer p { margin-top: 25px; font-size: 0.9em; }
+    .custom-footer p a { color: var(--text-color); text-decoration: none; transition: color 0.3s ease; font-weight: 500; }
+    .custom-footer p a:hover { color: var(--accent-color); }
+
+    /* --- Flash Message Styling --- */
+    .flash-messages {
+        position: fixed; /* Or absolute, depending on layout */
+        top: 80px; /* Below navbar */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050; /* High z-index */
+        width: 90%;
+        max-width: 600px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .flash-messages li {
+        padding: 15px 20px;
+        margin-bottom: 15px;
+        border-radius: 6px;
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        opacity: 0.95;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: 500;
+    }
+    .flash-messages .success { background-color: #28a745; border-left: 5px solid #218838; } /* Green */
+    .flash-messages .error, .flash-messages .danger { background-color: #dc3545; border-left: 5px solid #c82333; } /* Red */
+    .flash-messages .warning { background-color: #ffc107; border-left: 5px solid #e0a800; color: #333;} /* Yellow */
+    .flash-messages .info { background-color: #17a2b8; border-left: 5px solid #138496; } /* Blue */
+    .flash-messages button.close {
+        background: none;
+        border: none;
+        color: inherit; /* Use text color of parent */
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1;
+        opacity: 0.7;
+        cursor: pointer;
+        padding: 0 0 0 15px; /* Space it from text */
+    }
+     .flash-messages button.close:hover {
+        opacity: 1;
+    }
+
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+    <div class="w3-bar custom-navbar" id="myNavbar">
+        <a class="w3-bar-item w3-button w3-hover-black w3-hide-medium w3-hide-large w3-right" href="javascript:void(0);" onclick="toggleFunction()" title="Toggle Navigation Menu">
+            <i class="fa fa-bars"></i>
+        </a>
+        <a href="#home" class="w3-bar-item w3-button">Home</a>
+        <a href="#products" class="w3-bar-item w3-button w3-hide-small">Products</a>
+        <a href="#portfolio" class="w3-bar-item w3-button w3-hide-small">Our Work</a>
+        <a href="#services" class="w3-bar-item w3-button w3-hide-small">Services</a>
+        <a href="#contact" class="w3-bar-item w3-button w3-hide-small">Contact</a>
+
+        <a href="#" class="w3-bar-item w3-button w3-hide-small w3-right"><i class="fa fa-search"></i></a>
+
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('logout') }}" class="w3-bar-item w3-button w3-hide-small w3-right">
+                <i class="fa fa-sign-out w3-margin-right"></i>Logout
+            </a>
+            <a href="{{ url_for('profile') }}" class="w3-bar-item w3-button w3-hide-small w3-right">
+                <i class="fa fa-user w3-margin-right"></i>Profile ({{ current_user.username }})
+            </a>
+        {% else %}
+            <a href="{{ url_for('register') }}" class="w3-bar-item w3-button w3-hide-small w3-right">
+                <i class="fa fa-user-plus w3-margin-right"></i>Register
+            </a>
+            <a href="{{ url_for('login') }}" class="w3-bar-item w3-button w3-hide-small w3-right">
+                <i class="fa fa-sign-in w3-margin-right"></i>Login
+            </a>
+        {% endif %}
+    </div>
+
+    <div id="navDemo" class="w3-bar-block w3-hide w3-hide-large w3-hide-medium"> <!-- Mobile Menu -->
+        <a href="#products" class="w3-bar-item w3-button w3-padding-large" onclick="toggleFunction()">PRODUCTS</a>
+        <a href="#portfolio" class="w3-bar-item w3-button w3-padding-large" onclick="toggleFunction()">OUR WORK</a>
+        <a href="#services" class="w3-bar-item w3-button w3-padding-large" onclick="toggleFunction()">SERVICES</a>
+        <a href="#contact" class="w3-bar-item w3-button w3-padding-large" onclick="toggleFunction()">CONTACT</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('profile') }}" class="w3-bar-item w3-button w3-padding-large" onclick="toggleFunction()">PROFILE</a>
+            <a href="{{ url_for('logout') }}" class="w3-bar-item w3-button w3-padding-large" onclick="toggleFunction()">LOGOUT</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="w3-bar-item w3-button w3-padding-large" onclick="toggleFunction()">LOGIN</a>
+            <a href="{{ url_for('register') }}" class="w3-bar-item w3-button w3-padding-large" onclick="toggleFunction()">REGISTER</a>
+        {% endif %}
+        <a href="#" class="w3-bar-item w3-button w3-padding-large">SEARCH</a>
+    </div>
+</div>
+<!-- End Navbar -->
+
+<!-- Flash Messages Container -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flash-messages">
+        {% for category, message in messages %}
+        <li class="{{ category }}">
+            {{ message }}
+            <button type="button" class="close" onclick="this.parentElement.style.display='none';">×</button>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endwith %}
+
+<!-- Hero Section -->
+<div class="bgimg-1" id="home">
+    <div class="hero-content" data-aos="fade-in" data-aos-delay="100">
+        <h1 class="w3-jumbo w3-text-white w3-animate-opacity hero-title">MARUTHU FLOWERS</h1>
+        <p class="w3-xlarge w3-text-light-grey w3-animate-opacity hero-subtitle">Crafting Floral Elegance</p>
+        <a href="#products" class="gold-button hero-cta" data-aos="fade-up" data-aos-delay="300">
+            <i class="fa fa-leaf"></i> Discover Our Collections
+        </a>
+    </div>
+</div>
+
+<!-- Products Section -->
+<div class="section-padding" id="products">
+    <div class="w3-content">
+        <h2 class="section-title" data-aos="fade-up">Signature Blooms</h2>
+        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Explore our curated selection of exquisite flowers, sourced for freshness and beauty. Each bloom tells a story of nature's artistry, ready to brighten your space or occasion.</p>
+        <form action="{{ url_for('buy') }}" method="post">
+            <div class="w3-row-padding" style="margin: 0 -15px;"> <!-- Match item-column padding -->
+                {% for i in img_records %}
+                <div class="w3-col l4 m6 s12 item-column w3-margin-bottom" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                    <div class="item-card">
+                        <img src="{{ i.img_url }}" alt="{{ i.flower_name }}">
+                        <div class="item-info">
+                            <h3>{{ i.flower_name }}</h3>
+                            <p class="price">PRICE: {{ i.flower_price }}</p>
+                            <p class="description">{{ i.flower_description }}</p>
+                            <!-- Hidden field might not be needed if button value is used -->
+                            <!-- <input type="hidden" name="hidden_field" value="{{ i.product_id }}"> -->
+                            <button class="w3-button gold-button" type="submit" name="product_id" value="{{ i.product_id }}">
+                                <i class="fa fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                 <div class="w3-col s12" data-aos="fade-up">
+                     <p class="w3-center w3-large" style="color: var(--subtle-text-color);">No products available at the moment. Please check back soon!</p>
+                 </div>
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Our Works (Portfolio) Section -->
+<div class="section-padding" id="portfolio">
+    <div class="w3-content">
+        <h2 class="section-title" data-aos="fade-up">Floral Artistry</h2>
+        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Witness the passion and creativity we pour into every arrangement and event. From intimate gatherings to grand celebrations, our designs capture the essence of the moment.</p>
+        <div class="w3-row-padding" style="margin: 0 -15px;">
+            {% set portfolio_items = [
+                {'img': 'images/1.jpg', 'title': 'Elegant Wedding Centerpiece'},
+                {'img': 'images/2.jpg', 'title': 'Vibrant Hand-Tied Bouquet'},
+                {'img': 'images/3.jpg', 'title': 'Lush Corporate Event Floral'},
+                {'img': 'images/4.jpg', 'title': 'Modern Minimalist Design'},
+                {'img': 'images/1.jpg', 'title': 'Autumnal Richness'},
+                {'img': 'images/2.jpg', 'title': 'Sculptural Statement Piece'}
+            ] %}
+            {% for item in portfolio_items %}
+            <div class="w3-col l4 m6 s12 item-column w3-margin-bottom" data-aos="fade-up" data-aos-delay="{{ (loop.index + 1) * 100 }}">
+                 <div class="portfolio-card"> <!-- Changed class for clarity -->
+                     <div class="portfolio-image-container">
+                         <img src="{{ url_for('static', filename=item.img) }}" alt="{{ item.title }}">
+                         <div class="portfolio-overlay">
+                             <span>{{ item.title }}</span>
+                             <i class="fa fa-search-plus"></i>
+                         </div>
+                     </div>
+                 </div>
+            </div>
+            {% endfor %}
+        </div>
+         <div class="gallery-button-container" data-aos="fade-up" data-aos-delay="300">
+             <a href="#" class="gold-button">
+                 <i class="fa fa-image"></i> View Full Gallery
+             </a>
+         </div>
+    </div>
+</div>
+
+ <!-- Services Section -->
+<div class="section-padding" id="services">
+     <div class="w3-content">
+        <h2 class="section-title" data-aos="fade-up">Our Expertise</h2>
+        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Offering bespoke floral services to elevate your special occasions and everyday moments. We blend artistry with expertise to deliver unparalleled floral experiences.</p>
+        <div class="w3-row-padding" style="margin: 0 -16px;">
+            <div class="w3-col l4 m4 s12 w3-margin-bottom" data-aos="fade-up" data-aos-delay="200">
+                <div class="service-item">
+                    <i class="fa fa-paint-brush fa-fw"></i>
+                    <h3>Custom Designs</h3>
+                    <p>Collaborate with our florists for unique, personalized arrangements tailored to your vision and style.</p>
+                </div>
+            </div>
+            <div class="w3-col l4 m4 s12 w3-margin-bottom" data-aos="fade-up" data-aos-delay="300">
+                <div class="service-item">
+                    <i class="fa fa-calendar-check-o fa-fw"></i>
+                    <h3>Event Florals</h3>
+                    <p>Exquisite floral installations for weddings, corporate events, and parties that leave a lasting impression.</p>
+                </div>
+            </div>
+            <div class="w3-col l4 m4 s12 w3-margin-bottom" data-aos="fade-up" data-aos-delay="400">
+                 <div class="service-item">
+                     <i class="fa fa-truck fa-fw"></i>
+                     <h3>Premium Delivery</h3>
+                     <p>Careful and timely delivery service across the region, ensuring your flowers arrive in perfect condition.</p>
+                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Testimonials & Review Section Container -->
+<div class="review-section-container" id="reviews"> <!-- Added ID for linking -->
+    <div class="w3-content">
+
+        <!-- Testimonials -->
+        <div id="testimonials" style="padding-bottom: 80px;"> <!-- Add padding bottom -->
+            <h2 class="section-title" data-aos="fade-up">Client Experiences</h2>
+            <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Hear from those who've experienced the Maruthu Flowers difference. Your satisfaction inspires our craft.</p>
+
+            <!-- Example Static Testimonials -->
+            <div class="testimonial" data-aos="fade-left">
+                <p>"The most stunning bouquet I've ever received! The colors were vibrant, the arrangement was artistic, and the scent filled the room. Absolutely breathtaking work."</p>
+                <p class="author">Mathumitha C K.</p>
+            </div>
+            <div class="testimonial" data-aos="fade-right" data-aos-delay="100">
+                <p>"Professional, creative, and incredibly easy to work with for our wedding florals. They understood our vision perfectly and exceeded all expectations. Highly recommend!"</p>
+                <p class="author">Jothiga M.</p>
+            </div>
+            <div class="testimonial" data-aos="fade-left" data-aos-delay="200">
+                <p>"Always fresh, always beautiful. Maruthu Flowers is my go-to for every occasion, big or small. Their quality and service are consistently outstanding."</p>
+                <p class="author">Samantha P.</p>
+            </div>
+
+            <!-- Dynamic Reviews from DB -->
+            {% if reviews %} {# Changed variable name from 'review' to 'reviews' for clarity #}
+                {% for r in reviews %}
+                <div class="testimonial" data-aos="fade-up" data-aos-delay="{{ (loop.index + 2) * 100 }}">
+                     <p>{{ r.text }}</p>
+                     <p class="author">{{ r.username }} ({{ r.date }})</p> {# Display username and date #}
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div> <!-- End Testimonials -->
+
+        <!-- Review Form -->
+        {% if current_user.is_authenticated %}
+        <div class="review-container" data-aos="fade-up" data-aos-delay="400">
+            <form action="{{ url_for('review') }}" method="post">
+                <label for="review" class="formbold-form-label">Share Your Experience</label> {# Changed label text #}
+                <textarea {# Changed to textarea for longer reviews #}
+                    rows="4"
+                    id="review"
+                    name="review_text"
+                    class="formbold-form-input"
+                    placeholder="Tell us about your experience with Maruthu Flowers..."
+                    required
+                ></textarea>
+                <div class="submit-button-container">
+                    <button type="submit" class="submit-button">Submit Review</button>
+                </div>
+            </form>
+        </div>
+        {% else %}
+         <div class="w3-center w3-padding-32" data-aos="fade-up" data-aos-delay="400">
+             <p style="color: var(--subtle-text-color); font-size: 1.1em;">
+                 <a href="{{ url_for('login', next=request.url + '#reviews') }}" style="color: var(--accent-color); font-weight: bold; text-decoration:underline;">Log in</a> to leave a review.
+             </p>
+         </div>
+        {% endif %}
+        <!-- End Review Form -->
+
+    </div> <!-- End w3-content -->
+</div> <!-- End Review Section Container -->
+
+
+<!-- Parallax Contact Image -->
+<div class="bgimg-3 w3-display-container">
+     <!-- No text needed here, just visual break -->
+</div>
+
+<!-- Contact Details & Form Section -->
+<div class="section-padding" id="contact">
+     <div class="w3-content">
+        <h2 class="section-title" data-aos="fade-up">Connect With Us</h2>
+        <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">Visit our boutique or reach out online. Whether you have a question, a special request, or want to discuss event florals, we're here to help bring your floral vision to life.</p>
+        <div class="w3-row w3-padding-32">
+            <!-- Contact Info Column -->
+            <div class="w3-col m5 l5 contact-info-container" data-aos="fade-right" data-aos-delay="200">
+                 <img src="{{ url_for('static', filename='flower_shop_storefront_dark.jpg') }}" class="w3-image w3-round" style="width: 100%; max-width: 450px; margin: 0 auto 30px auto; display: block; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);" alt="Shop Location">
+                 <div class="w3-large contact-info">
+                    <p><i class="fa fa-map-marker fa-fw w3-xlarge"></i> 123 Flower Lane, Chicago, IL 60600</p>
+                    <p><i class="fa fa-phone fa-fw w3-xlarge"></i> Phone: +1 (312) 555-0123</p>
+                    <p><i class="fa fa-envelope fa-fw w3-xlarge"></i> Email: info@maruthuflowers.com</p>
+                    <div class="contact-social-icons">
+                        <a href="https://wa.me/13125550123" target="_blank" title="Chat on WhatsApp"><i class="fa fa-whatsapp"></i></a>
+                        <a href="#" target="_blank" title="Find us on Facebook"><i class="fa fa-facebook-square"></i></a>
+                        <a href="#" target="_blank" title="Follow us on Instagram"><i class="fa fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Contact Form Column -->
+            <div class="w3-col m7 l7 w3-panel" data-aos="fade-left" data-aos-delay="300">
+                <h3 style="margin-bottom: 25px; text-align: left;">Send us a Message:</h3>
+                <form action="{{ url_for('contact') }}" method="post">
+                    <div class="w3-row-padding" style="margin: 0 -8px 16px -8px;">
+                        <div class="w3-half w3-padding-small">
+                            <input class="w3-input" type="text" placeholder="Your Name" required name="name"> {# Changed name attribute #}
+                        </div>
+                        <div class="w3-half w3-padding-small">
+                            <input class="w3-input" type="email" placeholder="Your Email" required name="email"> {# Changed name attribute #}
+                        </div>
+                    </div>
+                    <div class="w3-padding-small w3-margin-bottom">
+                         <textarea class="w3-input" placeholder="Your Message..." required name="message" style="height: 160px;"></textarea> {# Changed name attribute #}
+                    </div>
+                    <button class="gold-button contact-form-button" type="submit">
+                        <i class="fa fa-paper-plane"></i> Send Inquiry
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="w3-center custom-footer">
+    <div class="w3-content">
+        <a href="#home" class="w3-button w3-margin-bottom"><i class="fa fa-arrow-up w3-margin-right"></i>Back to Top</a>
+        <div class="w3-xlarge w3-section">
+            <a href="#" class="fa fa-facebook-official" title="Facebook"></a>
+            <a href="#" class="fa fa-instagram" title="Instagram"></a>
+            <a href="#" class="fa fa-pinterest-p" title="Pinterest"></a>
+            <a href="#" class="fa fa-twitter" title="Twitter"></a>
+        </div>
+        <p>Powered by <a href="https://rafire.com" target="_blank"> Maruthu Flowers. All Rights Reserved.</p> {# Dynamic Year #}
+    </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    // Initialize AOS (Animate on Scroll)
+    AOS.init({
+        duration: 800, // Slightly faster animation
+        once: true,    // Animation happens only once
+        offset: 80,   // Trigger animation slightly earlier
+        debounceDelay: 50, // Adjust performance settings
+        easing: 'ease-in-out-cubic' // Smoother easing
+    });
+
+    // Mobile Nav Toggle
+    function toggleFunction() {
+        var x = document.getElementById("navDemo");
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
+
+    // Navbar scroll effect
+    var lastScrollTop = 0; // Keep track of last scroll position
+    var navbar = document.getElementById("myNavbar");
+    var delta = 5; // Minimum scroll distance to trigger change
+    var navbarHeight = navbar.offsetHeight;
+
+    window.onscroll = function() { scrollFunction() };
+
+    function scrollFunction() {
+        var st = window.pageYOffset || document.documentElement.scrollTop;
+
+        // Make sure they scroll more than delta
+        if (Math.abs(lastScrollTop - st) <= delta)
+            return;
+
+        if (st > lastScrollTop && st > navbarHeight){
+            // Scroll Down -> Hide navbar (optional, uncomment if desired)
+            // navbar.style.top = `-${navbarHeight}px`;
+            // Make navbar more opaque on scroll down (already implemented basically)
+             navbar.style.backgroundColor = "var(--navbar-scroll-bg)";
+             navbar.style.boxShadow = "0 4px 15px rgba(0,0,0,0.3)"; /* Stronger shadow on scroll */
+
+        } else {
+            // Scroll Up -> Show navbar
+             // navbar.style.top = "0";
+             if (st < 100) { // Near top
+                navbar.style.backgroundColor = "var(--navbar-bg)";
+                navbar.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)"; /* Default shadow */
+             } else { // Scrolled up but not near top
+                 navbar.style.backgroundColor = "var(--navbar-scroll-bg)";
+                 navbar.style.boxShadow = "0 4px 15px rgba(0,0,0,0.3)";
+             }
+        }
+        lastScrollTop = st <= 0 ? 0 : st; // For Mobile or negative scrolling
+    }
+
+    // Optional: Close flash messages after a delay
+    // document.addEventListener('DOMContentLoaded', (event) => {
+    //     const flashMessages = document.querySelectorAll('.flash-messages li');
+    //     flashMessages.forEach(msg => {
+    //         setTimeout(() => {
+    //             // msg.style.transition = 'opacity 0.5s ease';
+    //             // msg.style.opacity = '0';
+    //             // setTimeout(() => msg.style.display = 'none', 500); // Remove after fade
+    //             // Simpler removal without fade:
+    //             const closeButton = msg.querySelector('.close');
+    //             if(closeButton) closeButton.click(); // Simulate click on close button
+    //         }, 7000); // Close after 7 seconds
+    //     });
+    // });
+
+</script>
+
+</body>
+</html>

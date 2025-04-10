@@ -1,0 +1,318 @@
+/* === RETRO CRT/TERMINAL UPLOAD FORM STYLES === */
+
+/* --- Fonts & Base --- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+:root {
+    /* CRT Palette (Green Screen Version) */
+    --crt-bg: #081404;         /* Very dark green */
+    --crt-text: #00ff41;       /* Bright Green */
+    --crt-text-dim: #00a028;   /* Dimmer Green */
+    --crt-accent: #30ff70;     /* Lighter Green Accent */
+    --crt-border: rgba(0, 255, 65, 0.4);
+    --crt-shadow-glow: 0 0 15px rgba(0, 255, 65, 0.3);
+    --crt-shadow-hard: 2px 2px 0 rgba(0, 255, 65, 0.2); /* Pixelated shadow */
+
+    /* Basic Colors for feedback (adjust if needed) */
+    --success: #00ff41;
+    --danger: #ff4100;  /* Orange/Red contrast */
+    --warning: #ffb400; /* Amber */
+
+    /* Sizes */
+    --border-radius: 0px; /* Sharp corners */
+    --transition-speed: 0.15s; /* Faster transitions */
+}
+
+/* --- Text Selection Style --- */
+::selection {
+  background: var(--crt-text); /* Green background */
+  color: var(--crt-bg);      /* Dark text */
+}
+::-moz-selection { /* Firefox */
+  background: var(--crt-text);
+  color: var(--crt-bg);
+}
+
+body {
+    font-family: 'Roboto Mono', monospace; /* Monospace font is key */
+    background-color: var(--crt-bg);
+    color: var(--crt-text);
+    margin: 0;
+    padding: 0; /* Remove default padding */
+    line-height: 1.5; /* Tighter line height */
+    font-size: 16px; /* Base size */
+    min-height: 100vh;
+    cursor: default; /* Default cursor */
+    text-transform: uppercase; /* Make most text uppercase */
+    font-weight: 400;
+    display: flex; /* Use flex for footer */
+    flex-direction: column; /* Stack header, main, footer */
+}
+
+/* --- CRT Scanlines Effect --- */
+body::after {
+    content: " ";
+    display: block;
+    position: fixed; /* Cover viewport */
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.03), rgba(0, 0, 255, 0.04));
+    background-size: 100% 3px, /* Horizontal scanlines */
+                     6px 100%; /* Vertical color bars */
+    z-index: 2000; /* High z-index */
+    pointer-events: none; /* Doesn't interfere with interaction */
+    animation: flicker 0.08s infinite; /* Subtle flicker */
+}
+
+/* --- Text Flicker Animation --- */
+@keyframes flicker {
+  0% { opacity: 0.95; }
+  10% { opacity: 0.85; }
+  20% { opacity: 0.95; }
+  30% { opacity: 0.75; }
+  40% { opacity: 0.95; }
+  /* subtle blip */
+  40.5% { opacity: 0.2; text-shadow: 0 0 10px var(--crt-text); }
+  41% { opacity: 0.95; text-shadow: none; }
+  100% { opacity: 0.95; }
+}
+
+
+/* --- Header --- */
+header {
+    background: transparent; /* No background, let body show */
+    padding: 15px 30px;
+    text-align: left; /* Left align header */
+    border-bottom: 2px solid var(--crt-text); /* Solid green line */
+    position: relative;
+    z-index: 10; /* Above scanlines but below overlay */
+    text-shadow: var(--crt-shadow-glow);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem; /* Reasonable size */
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: var(--crt-text);
+    display: inline-block; /* To contain background */
+}
+/* Add blinking cursor imitation */
+header h1::after {
+    content: "_";
+    font-weight: bold;
+    margin-left: 5px;
+    animation: blinkCursor 1s steps(1) infinite;
+}
+
+@keyframes blinkCursor {
+  50% { opacity: 0; }
+}
+
+
+/* --- Main Content Area (Form Container) --- */
+.container {
+    width: 100%;
+    max-width: 700px; /* Limit width for better readability */
+    margin: 40px auto; /* Center container vertically and horizontally */
+    padding: 20px 30px;
+    position: relative; /* For stacking context */
+    z-index: 5; /* Below header */
+    flex-grow: 1; /* Allow container to take available space */
+}
+
+/* --- Form Structure --- */
+form {
+    width: 100%;
+}
+
+fieldset {
+    border: 1px solid var(--crt-text-dim);
+    padding: 25px 30px;
+    margin: 0; /* Reset default margin */
+    background-color: rgba(0, 20, 0, 0.1); /* Very subtle dark green tint */
+    /* box-shadow: var(--crt-shadow-hard); */ /* Optional hard shadow */
+}
+
+legend {
+    padding: 0 10px; /* Padding around text */
+    margin-left: -10px; /* Align with fieldset border text */
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--crt-accent); /* Lighter green */
+    letter-spacing: 1px;
+    text-transform: uppercase; /* Ensure uppercase */
+    /* background-color: var(--crt-bg); */ /* Cutout effect if needed */
+}
+
+/* --- Form Groups & Labels --- */
+.form-group {
+    margin-bottom: 20px; /* Spacing between form elements */
+}
+
+label {
+    display: block; /* Label above input */
+    margin-bottom: 8px;
+    color: var(--crt-text);
+    font-size: 0.9rem;
+    font-weight: 400; /* Normal weight for labels */
+    letter-spacing: 0.5px;
+}
+
+/* --- Input Fields (Text, Number, Textarea) --- */
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: 'Roboto Mono', monospace; /* Inherit mono font */
+    font-size: 0.9rem;
+    background-color: transparent; /* Match body background */
+    border: 1px solid var(--crt-text-dim);
+    color: var(--crt-text);
+    border-radius: var(--border-radius); /* 0px */
+    box-sizing: border-box; /* Include padding/border in width */
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    /* text-transform: uppercase; */ /* Optional: force input to uppercase */
+}
+
+textarea {
+    min-height: 100px; /* Give textarea some height */
+    resize: vertical; /* Allow vertical resize only */
+    line-height: 1.4;
+}
+
+/* Input Placeholder Text */
+input::placeholder,
+textarea::placeholder {
+    color: var(--crt-text-dim); /* Dimmer green for placeholder */
+    opacity: 1; /* Ensure visibility */
+    /* text-transform: none; */ /* Don't uppercase placeholder */
+}
+input::-moz-placeholder,
+textarea::-moz-placeholder { /* Firefox */
+    color: var(--crt-text-dim);
+    opacity: 1;
+    /* text-transform: none; */
+}
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: var(--crt-text-dim);
+    /* text-transform: none; */
+}
+input::-ms-input-placeholder,
+textarea::-ms-input-placeholder { /* Microsoft Edge */
+    color: var(--crt-text-dim);
+    /* text-transform: none; */
+}
+
+/* Focus State for Inputs */
+input[type="text"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+input[type="file"]:focus-within { /* Target container for file input focus */
+    outline: none; /* Remove default outline */
+    border-color: var(--crt-accent); /* Highlight border */
+    box-shadow: var(--crt-shadow-glow); /* Add subtle glow */
+}
+
+/* --- File Input Styling --- */
+input[type="file"] {
+    border: 1px solid var(--crt-text-dim);
+    padding: 5px; /* Minimal padding around the button/text */
+    font-size: 0.85rem;
+    color: var(--crt-text-dim); /* Text like 'No file chosen' */
+    background-color: transparent;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 0;
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+/* Style the "Choose File" button part */
+input[type="file"]::file-selector-button {
+    font-family: 'Roboto Mono', monospace;
+    font-weight: 400;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--crt-text);
+    background-color: transparent;
+    border: 1px solid var(--crt-text);
+    padding: 6px 12px;
+    margin-right: 15px; /* Space between button and text */
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+input[type="file"]:hover::file-selector-button {
+    background-color: var(--crt-text);
+    color: var(--crt-bg);
+}
+
+/* --- Submit Button --- */
+.but { /* Targeting the specific button class */
+    display: block; /* Full width */
+    width: 100%;
+    padding: 10px 15px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700; /* Bold */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid var(--crt-text);
+    color: var(--crt-text);
+    background-color: transparent;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    text-align: center;
+    border-radius: var(--border-radius); /* 0px */
+}
+.but:hover {
+    background-color: var(--crt-text); /* Invert colors */
+    color: var(--crt-bg);
+}
+.but:active {
+    background-color: var(--crt-accent);
+    color: var(--crt-bg);
+    border-color: var(--crt-accent);
+}
+
+/* --- Footer --- */
+footer {
+    text-align: center;
+    padding: 15px 30px;
+    margin-top: auto; /* Push footer to bottom with flexbox */
+    border-top: 1px solid var(--crt-text-dim); /* Dim top border */
+    position: relative; /* Ensure z-index works */
+    z-index: 10; /* Above scanlines */
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--crt-text-dim); /* Dimmer text */
+    letter-spacing: 0.5px;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    body { font-size: 14px; }
+    header { padding: 10px 15px; }
+    header h1 { font-size: 1.2rem; }
+    header h1::after { display: none; } /* Hide cursor on mobile */
+    .container { padding: 15px 20px; margin: 20px auto; }
+    fieldset { padding: 15px 20px; }
+    legend { font-size: 1rem; }
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    input[type="file"] { font-size: 0.85rem; padding: 8px 10px; }
+    input[type="file"]::file-selector-button { padding: 5px 10px; font-size: 0.75rem; }
+    .but { padding: 10px 12px; font-size: 0.9rem; }
+    footer { padding: 10px 15px; }
+    footer p { font-size: 0.75rem; }
+}

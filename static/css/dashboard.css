@@ -1,0 +1,393 @@
+/* === IMPRESSIVE ADMIN STYLES V6: Retro CRT/Terminal === */
+
+/* --- Fonts & Base --- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+/* OR use a more pixelated font if desired and available */
+
+:root {
+    /* CRT Palette (Green Screen Version) */
+    --crt-bg: #081404;         /* Very dark green */
+    --crt-text: #00ff41;       /* Bright Green */
+    --crt-text-dim: #00a028;   /* Dimmer Green */
+    --crt-accent: #30ff70;     /* Lighter Green Accent */
+    --crt-border: rgba(0, 255, 65, 0.4);
+    --crt-shadow-glow: 0 0 15px rgba(0, 255, 65, 0.3);
+    --crt-shadow-hard: 2px 2px 0 rgba(0, 255, 65, 0.2); /* Pixelated shadow */
+
+    /* Basic Colors for buttons etc. */
+    --success: #00ff41;
+    --danger: #ff4100;  /* Orange/Red contrast */
+    --warning: #ffb400; /* Amber */
+
+    /* Sizes */
+    --border-radius: 0px; /* Sharp corners */
+    --transition-speed: 0.15s; /* Faster transitions */
+}
+
+/* --- Text Selection Style --- */
+::selection {
+  background: var(--crt-text); /* Green background */
+  color: var(--crt-bg);      /* Dark text */
+}
+::-moz-selection { /* Firefox */
+  background: var(--crt-text);
+  color: var(--crt-bg);
+}
+
+body {
+    font-family: 'Roboto Mono', monospace; /* Monospace font is key */
+    background-color: var(--crt-bg);
+    color: var(--crt-text);
+    margin: 0;
+    line-height: 1.5; /* Tighter line height */
+    font-size: 16px; /* Can adjust base size */
+    min-height: 100vh;
+    cursor: default; /* Default cursor, less modern */
+    text-transform: uppercase; /* Make most text uppercase */
+    font-weight: 400;
+}
+
+/* --- CRT Scanlines Effect --- */
+body::after {
+    content: " ";
+    display: block;
+    position: fixed; /* Cover viewport */
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.03), rgba(0, 0, 255, 0.04));
+    background-size: 100% 3px, /* Horizontal scanlines */
+                     6px 100%; /* Vertical color bars */
+    z-index: 2000; /* High z-index */
+    pointer-events: none; /* Doesn't interfere with interaction */
+    animation: flicker 0.08s infinite; /* Subtle flicker */
+}
+
+/* --- Text Flicker Animation --- */
+@keyframes flicker {
+  0% { opacity: 0.9; }
+  5% { opacity: 0.75; }
+  10% { opacity: 0.9; }
+  15% { opacity: 0.6; }
+  20% { opacity: 0.9; }
+  25% { opacity: 0.5; }
+  30% { opacity: 0.9; }
+  /* Add random 'off' blips */
+  30.5% { opacity: 0.1; text-shadow: 0 0 10px var(--crt-text); }
+  31% { opacity: 0.9; text-shadow: none; }
+  70% { opacity: 0.85; }
+  75% { opacity: 0.5; }
+  80% { opacity: 0.9; }
+  85% { opacity: 0.7; }
+  90% { opacity: 0.9; }
+  90.5% { opacity: 0.2; text-shadow: 0 0 15px var(--crt-text); }
+  91% { opacity: 0.9; text-shadow: none; }
+  100% { opacity: 0.9; }
+}
+
+/* Apply flicker optionally to elements */
+/* .flicker-text { animation: flicker 0.15s infinite; } */
+
+
+/* --- Header --- */
+.header {
+    background: transparent;
+    padding: 15px 30px;
+    text-align: left; /* Left align header */
+    border-bottom: 2px solid var(--crt-text); /* Solid green line */
+    position: relative;
+    z-index: 10; /* Above scanlines but below overlay */
+    text-shadow: var(--crt-shadow-glow);
+}
+
+.title {
+    margin: 0;
+    font-size: 1.5rem; /* Reasonable size */
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: var(--crt-text);
+    display: inline-block; /* To contain background */
+    /* background-color: var(--crt-text);
+    color: var(--crt-bg);
+    padding: 2px 5px; */ /* Inverse style title? */
+}
+/* Add blinking cursor imitation */
+.title::after {
+    content: "_";
+    font-weight: bold;
+    margin-left: 5px;
+    animation: blinkCursor 1s steps(1) infinite;
+}
+
+@keyframes blinkCursor {
+  50% { opacity: 0; }
+}
+
+
+/* --- Main Content Area --- */
+main {
+     padding: 20px 30px;
+}
+
+/* --- Section Titles --- */
+.section-title {
+    text-align: left; /* Left align */
+    margin: 30px 0 25px;
+    font-size: 1.2rem;
+    color: var(--crt-accent); /* Lighter green */
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--crt-text-dim);
+    display: block; /* Full width underline */
+    /* text-shadow: var(--crt-shadow-hard); */ /* Optional pixel shadow */
+}
+
+/* --- Basic "Panel" / Card Style --- */
+.panel {
+    border: 1px solid var(--crt-text-dim);
+    padding: 15px 20px;
+    margin-bottom: 25px;
+    background-color: rgba(0, 20, 0, 0.1); /* Very subtle dark green tint */
+    /* box-shadow: var(--crt-shadow-hard); */ /* Optional pixel shadow */
+}
+
+/* Apply panel style to containers */
+.statistics-container, .charts-container, .table-container, .product-grid {
+    border: 1px solid var(--crt-text-dim);
+    padding: 15px; /* Add padding to container */
+    margin-bottom: 30px;
+    /* Reset padding if children also have panel style */
+    /* padding: 0; */
+}
+
+/* --- Statistics Section - Use text block layout --- */
+.statistics-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px 20px; /* Minimal gap */
+    border: none; padding: 0; margin: 20px 0; /* Reset container style */
+}
+
+.stat-card {
+    /* No background or border needed, just text blocks */
+    padding: 5px 0;
+    text-align: left;
+}
+
+.stat-card h3 {
+    font-size: 0.8rem;
+    margin: 0;
+    color: var(--crt-text-dim); /* Dim label */
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block; /* Fit content */
+    margin-right: 10px;
+}
+
+.stat-card .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--crt-text);
+    line-height: 1;
+    display: inline-block;
+    text-shadow: var(--crt-shadow-glow);
+}
+
+/* --- Charts Section - Basic Container --- */
+.charts-container {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px; margin-top: 20px;
+    border-color: var(--crt-border); /* Slightly brighter border */
+}
+
+.chart { /* Simple border for chart area */
+    border: 1px solid var(--crt-text-dim);
+    padding: 15px; min-height: 300px;
+    display: flex; flex-direction: column;
+}
+
+.chart h3 {
+    text-align: left; margin: 0 0 15px; font-size: 0.9rem;
+    color: var(--crt-accent); font-weight: 700; letter-spacing: 0.5px;
+}
+
+.chart canvas {
+    flex-grow: 1; width: 100% !important; height: auto !important;
+    max-height: 250px; /* Control height */
+    /* Add CRT effect to charts? - might look weird */
+    /* filter: sepia(1) hue-rotate(60deg) saturate(8) brightness(0.9) contrast(1.2); */
+}
+
+
+/* --- Buttons - Retro Style --- */
+/* Basic Button Style */
+.button-retro {
+    padding: 8px 15px; font-size: 0.9rem; font-weight: 400;
+    text-transform: uppercase; letter-spacing: 1px;
+    cursor: pointer; text-decoration: none; display: inline-block;
+    border: 1px solid var(--crt-text);
+    color: var(--crt-text); background-color: transparent;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    text-align: center;
+}
+.button-retro:hover {
+    background-color: var(--crt-text); /* Invert colors */
+    color: var(--crt-bg);
+}
+.button-retro:active {
+    background-color: var(--crt-accent);
+    color: var(--crt-bg);
+    border-color: var(--crt-accent);
+}
+
+/* Add Product Button */
+.add-product { text-align: center; margin: 40px 0; }
+.add-btn.button-retro {
+    font-size: 1rem; font-weight: 700; padding: 10px 25px;
+    border-width: 2px;
+}
+
+/* Filter Buttons */
+.filter-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 25px 0; }
+.btn.button-retro {
+    padding: 6px 12px; font-size: 0.8rem;
+    border-color: var(--crt-text-dim); /* Dimmer border initially */
+    color: var(--crt-text-dim);
+}
+.btn.button-retro:hover {
+    border-color: var(--crt-text);
+    background-color: var(--crt-text); color: var(--crt-bg);
+}
+.btn.button-retro.active { /* Active filter button */
+    border-color: var(--crt-accent);
+    background-color: var(--crt-accent); color: var(--crt-bg);
+    font-weight: 700;
+}
+.btn.button-retro.active:hover { background-color: var(--crt-accent); }
+
+
+/* --- Table Section - Simple Text Grid --- */
+.table-container { /* Inherits panel style */
+    padding: 0; /* Table provides structure */
+    border-color: var(--crt-border);
+    overflow-x: auto; /* Ensure horizontal scroll */
+}
+
+#order-table {
+    width: 100%; border-collapse: collapse; /* Use collapse */ border-spacing: 0;
+}
+
+#order-table th, #order-table td {
+    padding: 10px 12px; text-align: left; vertical-align: top;
+    border: 1px solid var(--crt-text-dim); /* Grid lines */
+    font-size: 0.85rem; /* Smaller text */
+    color: var(--crt-text);
+    word-break: break-word; /* Prevent long words breaking layout */
+}
+
+#order-table th {
+    background-color: rgba(0, 255, 65, 0.1); /* Faint header bg */
+    color: var(--crt-accent); font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    position: sticky; top: 0; /* Basic sticky */ z-index: 5;
+}
+
+/* No hover effect for starkness */
+/* #order-table tbody tr:hover td { background-color: rgba(0, 255, 65, 0.05); } */
+
+/* Status Dropdown - Very basic */
+#order-table .status-dropdown {
+    appearance: none; -webkit-appearance: none;
+    background-color: var(--crt-bg);
+    border: 1px solid var(--crt-text-dim); color: var(--crt-text);
+    padding: 4px 6px; font-size: 0.8rem;
+    font-family: 'Roboto Mono', monospace; text-transform: uppercase;
+    cursor: pointer; min-width: 90px; border-radius: 0;
+}
+#order-table .status-dropdown option { background: var(--crt-bg); color: var(--crt-text); }
+#order-table .status-dropdown:focus { outline: 1px solid var(--crt-accent); }
+
+/* --- Product Section - Simple Text Blocks --- */
+.product-grid { /* Inherits panel */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 15px; margin-top: 20px;
+}
+
+.product-card { /* Individual product info block */
+    border: 1px solid var(--crt-text-dim);
+    padding: 15px;
+}
+
+.product-image-container { margin-bottom: 10px; } /* Space for image if used */
+.product-image {
+    width: 100%; max-height: 150px; object-fit: contain;
+    display: block;
+    border: 1px solid var(--crt-text-dim); /* Border around image */
+    /* Optional CRT effect */
+    /* filter: sepia(1) hue-rotate(60deg) saturate(8) brightness(0.9) contrast(1.2) grayscale(0.2); */
+}
+.product-image-placeholder {
+    width: 100%; height: 100px; border: 1px dashed var(--crt-text-dim);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--crt-text-dim); font-size: 0.8em; padding: 10px;
+}
+
+.product-info { /* Container for text, but no special style needed */ }
+
+.product-name {
+    margin: 0 0 5px; font-size: 1rem; font-weight: 700;
+    color: var(--crt-accent); /* Highlight name */
+    display: block;
+}
+
+.product-price {
+    font-size: 0.9rem; color: var(--crt-text);
+    font-weight: 700; margin-bottom: 8px; display: block;
+}
+
+.product-des {
+    font-size: 0.8rem; color: var(--crt-text-dim); /* Dim description */
+    margin-bottom: 15px; line-height: 1.4;
+}
+
+/* Action Buttons within product card */
+.product-actions { display: flex; gap: 8px; margin-top: 10px; }
+.action-btn.button-retro { padding: 5px 10px; font-size: 0.75rem; flex-grow: 1; }
+.edit-btn.button-retro { border-color: var(--success); color: var(--success); }
+.edit-btn.button-retro:hover { background-color: var(--success); color: var(--crt-bg); }
+.delete-btn.button-retro { border-color: var(--danger); color: var(--danger); }
+.delete-btn.button-retro:hover { background-color: var(--danger); color: var(--crt-bg); }
+
+/* --- Flash Messages --- */
+.flash-messages .alert, .dynamic-flash {
+    margin: 20px 0; padding: 10px 15px;
+    border: 1px dashed; /* Dashed border */
+    border-radius: 0; font-size: 0.9rem; display: block;
+    background: rgba(0, 50, 0, 0.2); color: var(--crt-text);
+    text-align: left;
+    text-shadow: var(--crt-shadow-hard);
+}
+.alert-success { border-color: var(--success); color: var(--success); }
+.alert-error { border-color: var(--danger); color: var(--danger); }
+.alert-info { border-color: var(--crt-accent); color: var(--crt-accent); }
+.alert-warning { border-color: var(--warning); color: var(--warning); }
+
+.dynamic-flash:not([style*="display: block"]) { display: none; }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    body { font-size: 14px; }
+    .header { padding: 10px 15px; }
+    .title { font-size: 1.2rem; }
+    .title::after { display: none; } /* Hide cursor on mobile */
+    main { padding: 15px; }
+    .section-title { font-size: 1rem; }
+    .stat-card .stat-value { font-size: 1.2rem; }
+    #order-table th, #order-table td { font-size: 0.75rem; padding: 8px; }
+    .product-card { padding: 10px; }
+    .product-name { font-size: 0.9rem; }
+    .add-btn.button-retro { padding: 8px 20px; font-size: 0.9rem; }
+    .btn.button-retro { padding: 5px 10px; }
+}

@@ -1,0 +1,270 @@
+/* === RETRO CRT/TERMINAL EDIT PRODUCT FORM STYLES === */
+
+/* --- Fonts & Base --- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+:root {
+    /* CRT Palette (Green Screen Version) */
+    --crt-bg: #081404;         /* Very dark green */
+    --crt-text: #00ff41;       /* Bright Green */
+    --crt-text-dim: #00a028;   /* Dimmer Green */
+    --crt-accent: #30ff70;     /* Lighter Green Accent */
+    --crt-border: rgba(0, 255, 65, 0.4);
+    --crt-shadow-glow: 0 0 15px rgba(0, 255, 65, 0.3);
+    --crt-shadow-hard: 2px 2px 0 rgba(0, 255, 65, 0.2); /* Pixelated shadow */
+
+    /* Basic Colors (can reuse success/danger if needed) */
+    --primary-action: var(--crt-text);
+    --secondary-action: var(--crt-text-dim);
+
+    /* Sizes */
+    --border-radius: 0px; /* Sharp corners */
+    --transition-speed: 0.15s; /* Faster transitions */
+}
+
+/* --- Text Selection Style --- */
+::selection {
+  background: var(--crt-text); /* Green background */
+  color: var(--crt-bg);      /* Dark text */
+}
+::-moz-selection { /* Firefox */
+  background: var(--crt-text);
+  color: var(--crt-bg);
+}
+
+body {
+    font-family: 'Roboto Mono', monospace; /* Monospace font is key */
+    background-color: var(--crt-bg);
+    color: var(--crt-text);
+    margin: 0;
+    padding: 0; /* Remove default padding */
+    line-height: 1.5; /* Tighter line height */
+    font-size: 16px; /* Base size */
+    min-height: 100vh;
+    cursor: default; /* Default cursor */
+    text-transform: uppercase; /* Make most text uppercase */
+    font-weight: 400;
+    display: flex; /* Use flex for layout */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center content horizontally */
+}
+
+/* --- CRT Scanlines Effect --- */
+body::after {
+    content: " ";
+    display: block;
+    position: fixed; /* Cover viewport */
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.04), rgba(0, 255, 0, 0.03), rgba(0, 0, 255, 0.04));
+    background-size: 100% 3px, /* Horizontal scanlines */
+                     6px 100%; /* Vertical color bars */
+    z-index: 2000; /* High z-index */
+    pointer-events: none; /* Doesn't interfere with interaction */
+    animation: flicker 0.08s infinite; /* Subtle flicker */
+}
+
+/* --- Text Flicker Animation --- */
+@keyframes flicker {
+  0% { opacity: 0.95; }
+  10% { opacity: 0.85; }
+  20% { opacity: 0.95; }
+  30% { opacity: 0.75; }
+  40% { opacity: 0.95; }
+  /* subtle blip */
+  40.5% { opacity: 0.2; text-shadow: 0 0 10px var(--crt-text); }
+  41% { opacity: 0.95; text-shadow: none; }
+  100% { opacity: 0.95; }
+}
+
+/* --- Main Content Area (Form Container) --- */
+.container {
+    width: 100%;
+    max-width: 600px; /* Slightly smaller max-width maybe */
+    margin: 30px 0; /* Top/bottom margin, centered by body flex */
+    padding: 20px 30px;
+    position: relative; /* For stacking context */
+    z-index: 5; /* Below scanlines */
+    border: 1px solid var(--crt-text-dim); /* Add border to container */
+    background-color: rgba(0, 20, 0, 0.1); /* Subtle bg tint */
+}
+
+/* --- Header --- */
+header {
+    text-align: left; /* Left align header */
+    margin-bottom: 25px; /* Space below header */
+    padding-bottom: 10px; /* Space below text */
+    border-bottom: 1px solid var(--crt-text-dim); /* Separator line */
+    position: relative;
+    z-index: 10;
+    text-shadow: var(--crt-shadow-glow);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.3rem; /* Slightly smaller title */
+    letter-spacing: 2px;
+    font-weight: 700;
+    color: var(--crt-accent); /* Use accent for title */
+    display: inline-block;
+}
+/* Optional: Blinking cursor for header */
+/* header h1::after {
+    content: "_";
+    font-weight: bold;
+    margin-left: 5px;
+    animation: blinkCursor 1s steps(1) infinite;
+}
+
+@keyframes blinkCursor {
+  50% { opacity: 0; }
+} */
+
+
+/* --- Form Structure --- */
+.edit-form {
+    width: 100%;
+}
+
+/* --- Form Groups & Labels --- */
+.form-group {
+    margin-bottom: 20px; /* Spacing between form elements */
+}
+
+label {
+    display: block; /* Label above input */
+    margin-bottom: 8px;
+    color: var(--crt-text);
+    font-size: 0.9rem;
+    font-weight: 400; /* Normal weight for labels */
+    letter-spacing: 0.5px;
+}
+
+/* --- Input Fields --- */
+input[type="text"] { /* Targets both fname and price */
+    width: 100%;
+    padding: 10px 12px;
+    font-family: 'Roboto Mono', monospace; /* Inherit mono font */
+    font-size: 0.9rem;
+    background-color: transparent; /* Match body background */
+    border: 1px solid var(--crt-text-dim);
+    color: var(--crt-text);
+    border-radius: var(--border-radius); /* 0px */
+    box-sizing: border-box; /* Include padding/border in width */
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    /* text-transform: uppercase; */ /* Optional: force input to uppercase */
+}
+
+/* Input Placeholder Text */
+input::placeholder {
+    color: var(--crt-text-dim); /* Dimmer green for placeholder */
+    opacity: 1; /* Ensure visibility */
+    text-transform: none; /* Don't uppercase placeholder */
+}
+input::-moz-placeholder { /* Firefox */
+    color: var(--crt-text-dim);
+    opacity: 1;
+    text-transform: none;
+}
+input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: var(--crt-text-dim);
+    text-transform: none;
+}
+input::-ms-input-placeholder { /* Microsoft Edge */
+    color: var(--crt-text-dim);
+    text-transform: none;
+}
+
+/* Focus State for Inputs */
+input[type="text"]:focus {
+    outline: none; /* Remove default outline */
+    border-color: var(--crt-accent); /* Highlight border */
+    box-shadow: var(--crt-shadow-glow); /* Add subtle glow */
+}
+
+/* --- Form Actions (Buttons) --- */
+.form-actions {
+    margin-top: 30px; /* Space above buttons */
+    display: flex;
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 15px; /* Space between buttons */
+}
+
+/* --- Base Button Style --- */
+.btn-primary,
+.btn-secondary {
+    padding: 8px 20px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 700; /* Bold */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-decoration: none;
+    border: 1px solid; /* Border defined by specific class */
+    color: var(--crt-text);
+    background-color: transparent;
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    text-align: center;
+    border-radius: var(--border-radius); /* 0px */
+    display: inline-block; /* Necessary for anchor tag */
+}
+
+/* Primary Button (Update) */
+.btn-primary {
+    border-color: var(--primary-action); /* Bright green border */
+    color: var(--primary-action);
+}
+.btn-primary:hover {
+    background-color: var(--primary-action); /* Invert colors */
+    color: var(--crt-bg);
+}
+.btn-primary:active {
+    background-color: var(--crt-accent); /* Lighter green on press */
+    color: var(--crt-bg);
+    border-color: var(--crt-accent);
+}
+
+/* Secondary Button (Cancel) - Anchor styled as button */
+.btn-secondary {
+    border-color: var(--secondary-action); /* Dim green border */
+    color: var(--secondary-action);
+}
+.btn-secondary:hover {
+    background-color: var(--secondary-action); /* Invert dim colors */
+    color: var(--crt-bg);
+    border-color: var(--secondary-action); /* Keep border color on hover */
+}
+.btn-secondary:active {
+    background-color: var(--crt-text); /* Use normal green on press */
+    color: var(--crt-bg);
+    border-color: var(--crt-text);
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 640px) { /* Adjust breakpoint if needed */
+    body { font-size: 14px; }
+    .container {
+        padding: 15px 20px;
+        margin-left: 15px; /* Add side margin */
+        margin-right: 15px;
+        max-width: none; /* Allow full width minus margins */
+    }
+    header { margin-bottom: 20px; }
+    header h1 { font-size: 1.1rem; }
+    input[type="text"] {
+        font-size: 0.85rem;
+        padding: 8px 10px;
+    }
+    .form-actions {
+        flex-direction: column; /* Stack buttons vertically */
+        gap: 10px;
+    }
+    .btn-primary,
+    .btn-secondary {
+        width: 100%; /* Make buttons full width */
+        padding: 10px 15px; /* Adjust padding for stacked */
+        font-size: 0.85rem;
+    }
+}
