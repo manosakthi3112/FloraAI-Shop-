@@ -1,0 +1,14 @@
+# Flask framework and essentials
+Flask
+Flask-Bcrypt  # For password hashing
+Flask-Login   # For user session management
+
+# MongoDB interaction
+pymongo[srv]  # Includes driver and SRV record support for Atlas connections
+
+# Note: 'gridfs' and 'bson' are part of the 'pymongo' package
+# Note: 'io', 'datetime', 'traceback', 'logging', 'functools' are Python standard libraries
+
+# Optional: Only needed if your MongoDB connection explicitly requires it
+# and your system/driver doesn't find CA certificates automatically.
+# certifi
