@@ -1,11 +1,11 @@
 # FloraAI-Shop-
-# Maruthu Flowers - Flask Web Application
+# FloraAI-Shop - Flask Web Application
 
 **Author:** Manosakthi Thiyagarajan
 
 ## Description
 
-Maruthu Flowers is a web application built with Flask and MongoDB that allows users to browse, order, and review flower products. It includes separate functionalities for regular users and administrators. Administrators can manage products, view orders, manage reviews, and monitor basic site statistics via a dashboard.
+FloraAI-Shop is a web application built with Flask and MongoDB that allows users to browse, order, and review flower products. It includes separate functionalities for regular users and administrators. Administrators can manage products, view orders, manage reviews, and monitor basic site statistics via a dashboard.
 
 ## Features
 
