@@ -3,20 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="static/css/styles_register.css">
+    <title>Create Your Account</title>
+    <!-- Note: In a real project, this CSS would be in a separate styles_register.css file -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --primary-color: #6a5af9;
+            --secondary-color: #d52de9;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --text-color: #f0f0f0;
+            --bg-color-light: rgba(255, 255, 255, 0.1);
+            --bg-color-solid: #1e1e2f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+        }
+
+        .register-form-wrapper {
+            background: var(--bg-color-light);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .register-form-wrapper h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 2.2em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 300;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: transparent;
+            border-radius: 8px;
+            color: var(--text-color);
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 15px rgba(213, 45, 233, 0.5);
+        }
+
+        #password-strength {
+            margin-top: -10px;
+            margin-bottom: 15px;
+            padding-left: 15px;
+        }
+
+        #password-strength ul {
+            list-style: none;
+            padding: 0;
+            font-size: 0.85em;
+        }
+
+        #password-strength li {
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        #password-strength li::before {
+            content: '○';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            transition: content 0.3s, color 0.3s;
+        }
+
+        #password-strength li.valid {
+            color: var(--success-color);
+        }
+        #password-strength li.valid::before {
+            content: '✔';
+            color: var(--success-color);
+        }
+
+        #password-strength li.invalid {
+            color: var(--error-color);
+        }
+        #password-strength li.invalid::before {
+            content: '✖';
+            color: var(--error-color);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 300;
+        }
+
+        .login-link a {
+            color: var(--text-color);
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .login-link a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        #message {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            font-weight: 400;
+            display: none; /* Hidden by default */
+        }
+        
+        #message.success {
+            background-color: rgba(40, 167, 69, 0.3);
+            color: #d4edda;
+            border: 1px solid var(--success-color);
+            display: block;
+        }
+
+        #message.error {
+            background-color: rgba(220, 53, 69, 0.3);
+            color: #f8d7da;
+            border: 1px solid var(--error-color);
+            display: block;
+        }
+
+    </style>
 </head>
 <body>
     <div class="container">
-        <div class="register-form">
+        <div class="register-form-wrapper">
             <h2>Create Account</h2>
-            <form method="POST">
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="password" name="password" placeholder="Password" required>
+            
+            <!-- Message area for success/error feedback -->
+            <div id="message"></div>
+
+            <!-- The form will not submit until validation passes -->
+            <form id="register-form" method="POST" onsubmit="return handleFormSubmit(event)">
+                
+                <div class="input-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Choose a unique username" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                </div>
+                
+                <!-- Real-time password strength checker -->
+                <div id="password-strength">
+                    <ul>
+                        <li id="length">At least 8 characters</li>
+                        <li id="uppercase">At least one uppercase letter (A-Z)</li>
+                        <li id="number">At least one number (0-9)</li>
+                        <li id="symbol">At least one special symbol (!@#$%)</li>
+                    </ul>
+                </div>
+
+                <div class="input-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm_password" placeholder="Re-enter your password" required>
+                </div>
+
                 <button type="submit">Register</button>
             </form>
-            <a href="{{ url_for('login') }}" class="login-link">Already have an account? Login</a>
+
+            <p class="login-link">
+                Already have an account? <a href="{{ url_for('login') }}">Login</a>
+            </p>
         </div>
     </div>
+
+    <!-- Note: In a real project, this JavaScript would be in a separate .js file -->
+    <script>
+        // DOM Elements
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const form = document.getElementById('register-form');
+        const messageDiv = document.getElementById('message');
+
+        // Password strength requirement elements
+        const lengthCheck = document.getElementById('length');
+        const uppercaseCheck = document.getElementById('uppercase');
+        const numberCheck = document.getElementById('number');
+        const symbolCheck = document.getElementById('symbol');
+
+        // Regular Expressions for validation
+        const uppercaseRegex = /[A-Z]/;
+        const numberRegex = /[0-9]/;
+        const symbolRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+        let passwordIsValid = false;
+
+        // Function to update the validation checklist
+        const validatePassword = () => {
+            const password = passwordInput.value;
+            let checks = {
+                length: password.length >= 8,
+                uppercase: uppercaseRegex.test(password),
+                number: numberRegex.test(password),
+                symbol: symbolRegex.test(password),
+            };
+
+            // Update class for length check
+            lengthCheck.className = checks.length ? 'valid' : 'invalid';
+            // Update class for uppercase check
+            uppercaseCheck.className = checks.uppercase ? 'valid' : 'invalid';
+            // Update class for number check
+            numberCheck.className = checks.number ? 'valid' : 'invalid';
+            // Update class for symbol check
+            symbolCheck.className = checks.symbol ? 'valid' : 'invalid';
+
+            // Check if all criteria are met
+            passwordIsValid = Object.values(checks).every(Boolean);
+        };
+
+        // Event listener for real-time password validation
+        passwordInput.addEventListener('input', validatePassword);
+
+
+        // Function to display messages
+        const showMessage = (text, type) => {
+            messageDiv.textContent = text;
+            messageDiv.className = type; // 'success' or 'error'
+        };
+
+        // Function to handle form submission
+        const handleFormSubmit = (event) => {
+            // Prevent the form from submitting by default
+            event.preventDefault();
+
+            // Re-validate on submit, just in case
+            validatePassword();
+
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            // Clear previous messages
+            messageDiv.textContent = '';
+            messageDiv.className = '';
+
+            // --- Validation Checks ---
+            if (!passwordIsValid) {
+                showMessage('Your password does not meet all the requirements.', 'error');
+                return false; // Stop submission
+            }
+
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match. Please try again.', 'error');
+                return false; // Stop submission
+            }
+
+            // --- If All Validation Passes ---
+            showMessage('Registration successful! Redirecting...', 'success');
+
+            // Here, you would typically allow the form to submit to the server.
+            // For this demo, we'll simulate it. In a real app, you would remove
+            // the setTimeout and just call form.submit() or use Fetch API.
+            
+            // To submit the form programmatically after validation:
+            // form.submit();
+            
+            // Example of a delayed redirect after showing success message
+            setTimeout(() => {
+                // This will submit the form to the action specified in the <form> tag
+                // In your case, it will POST to the current URL.
+                form.submit();
+            }, 2000); // Wait 2 seconds before submitting
+        };
+
+    </script>
 </body>
 </html>
