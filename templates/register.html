@@ -3,19 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Your Account</title>
+    <title>Create Your Account - Black & Gold</title>
     <!-- Note: In a real project, this CSS would be in a separate styles_register.css file -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap'); /* Elegant font for headings */
 
         :root {
-            --primary-color: #6a5af9;
-            --secondary-color: #d52de9;
-            --success-color: #28a745;
-            --error-color: #dc3545;
-            --text-color: #f0f0f0;
-            --bg-color-light: rgba(255, 255, 255, 0.1);
-            --bg-color-solid: #1e1e2f;
+            --primary-gold: #FFD700; /* Classic Gold */
+            --secondary-gold: #B8860B; /* DarkGoldenRod - for accents or darker shades */
+            --rich-black: #0D0D0D; /* A very dark black */
+            --content-black: #1A1A1A; /* Slightly lighter black for form elements */
+            --text-color-light: #E0E0E0; /* Off-white for general text */
+            --text-gold-accent: #FFD700;
+
+            --success-color: #28a745; /* Keep standard for clarity */
+            --error-color: #dc3545;   /* Keep standard for clarity */
+            
+            --form-bg-color-light: rgba(10, 10, 10, 0.6); /* Translucent dark for glassmorphism */
+            --form-border-color: rgba(255, 215, 0, 0.25); /* Subtle gold border */
         }
 
         * {
@@ -30,31 +36,38 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: var(--text-color);
+            background: var(--rich-black); /* Solid rich black background */
+            /* Or a subtle gradient:
+            background: linear-gradient(135deg, #222 0%, var(--rich-black) 100%);
+            */
+            color: var(--text-color-light);
             line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scroll from potential glow effects */
         }
 
         .container {
             width: 100%;
-            max-width: 450px;
+            max-width: 480px; /* Slightly wider for a more premium feel */
             padding: 20px;
         }
 
         .register-form-wrapper {
-            background: var(--bg-color-light);
-            padding: 40px;
+            background: var(--form-bg-color-light);
+            padding: 40px 45px;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--form-border-color);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--form-border-color);
         }
 
         .register-form-wrapper h2 {
             text-align: center;
-            margin-bottom: 25px;
-            font-weight: 600;
-            font-size: 2.2em;
+            margin-bottom: 30px;
+            font-family: 'Cinzel', serif; /* Elegant serif font */
+            font-weight: 700;
+            font-size: 2.5em;
+            color: var(--primary-gold);
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .input-group {
@@ -64,68 +77,73 @@
 
         .input-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 300;
+            font-size: 0.9em;
+            color: var(--text-color-light);
         }
 
         .input-group input {
             width: 100%;
-            padding: 12px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            background: transparent;
+            padding: 14px 18px;
+            border: 1px solid rgba(255, 215, 0, 0.3); /* Gold-tinted border */
+            background: rgba(0,0,0,0.2); /* Darker transparent background */
             border-radius: 8px;
-            color: var(--text-color);
+            color: var(--text-color-light);
             font-size: 1em;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
 
         .input-group input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(224, 224, 224, 0.5);
         }
 
         .input-group input:focus {
             outline: none;
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 15px rgba(213, 45, 233, 0.5);
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); /* Gold glow */
         }
 
         #password-strength {
             margin-top: -10px;
-            margin-bottom: 15px;
-            padding-left: 15px;
+            margin-bottom: 20px;
+            padding-left: 5px; /* Align with input text a bit */
         }
 
         #password-strength ul {
             list-style: none;
             padding: 0;
-            font-size: 0.85em;
+            font-size: 0.8em;
         }
 
         #password-strength li {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(224, 224, 224, 0.8);
             transition: color 0.3s;
             position: relative;
-            padding-left: 20px;
+            padding-left: 25px; /* Space for icon */
+            margin-bottom: 5px;
         }
         
         #password-strength li::before {
-            content: '○';
+            content: '○'; /* Default bullet */
             position: absolute;
-            left: 0;
+            left: 5px;
             font-weight: bold;
             transition: content 0.3s, color 0.3s;
+            font-size: 1.1em;
+            line-height: 1;
         }
 
         #password-strength li.valid {
-            color: var(--success-color);
+            color: var(--text-gold-accent);
         }
         #password-strength li.valid::before {
             content: '✔';
-            color: var(--success-color);
+            color: var(--text-gold-accent);
         }
 
         #password-strength li.invalid {
-            color: var(--error-color);
+            color: var(--error-color); /* Keep red for error indication */
         }
         #password-strength li.invalid::before {
             content: '✖';
@@ -137,61 +155,69 @@
             padding: 15px;
             border: none;
             border-radius: 8px;
-            background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-            color: white;
+            background: linear-gradient(45deg, var(--secondary-gold), var(--primary-gold));
+            color: var(--rich-black); /* Text color on button */
             font-size: 1.2em;
             font-weight: 600;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         button[type="submit"]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3), 0 4px 10px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, var(--primary-gold), var(--secondary-gold)); /* Invert gradient on hover */
         }
 
         button[type="submit"]:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 10px rgba(255, 215, 0, 0.2), 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .login-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 25px;
             font-weight: 300;
+            font-size: 0.95em;
         }
 
         .login-link a {
-            color: var(--text-color);
+            color: var(--primary-gold);
             font-weight: 600;
             text-decoration: none;
-            transition: color 0.3s;
+            transition: color 0.3s, text-shadow 0.3s;
         }
 
         .login-link a:hover {
-            color: var(--secondary-color);
+            color: #FFFACD; /* Lighter gold on hover */
             text-decoration: underline;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
         }
 
         #message {
             text-align: center;
-            padding: 10px;
-            margin-bottom: 15px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
             border-radius: 8px;
             font-weight: 400;
             display: none; /* Hidden by default */
+            border-width: 1px;
+            border-style: solid;
         }
         
         #message.success {
-            background-color: rgba(40, 167, 69, 0.3);
+            background-color: rgba(40, 167, 69, 0.15); /* Darker, subtle green background */
             color: #d4edda;
-            border: 1px solid var(--success-color);
+            border-color: var(--success-color);
             display: block;
         }
 
         #message.error {
-            background-color: rgba(220, 53, 69, 0.3);
+            background-color: rgba(220, 53, 69, 0.15); /* Darker, subtle red background */
             color: #f8d7da;
-            border: 1px solid var(--error-color);
+            border-color: var(--error-color);
             display: block;
         }
 
@@ -202,10 +228,8 @@
         <div class="register-form-wrapper">
             <h2>Create Account</h2>
             
-            <!-- Message area for success/error feedback -->
             <div id="message"></div>
 
-            <!-- The form will not submit until validation passes -->
             <form id="register-form" method="POST" onsubmit="return handleFormSubmit(event)">
                 
                 <div class="input-group">
@@ -218,7 +242,6 @@
                     <input type="password" id="password" name="password" placeholder="Create a strong password" required>
                 </div>
                 
-                <!-- Real-time password strength checker -->
                 <div id="password-strength">
                     <ul>
                         <li id="length">At least 8 characters</li>
@@ -242,7 +265,6 @@
         </div>
     </div>
 
-    <!-- Note: In a real project, this JavaScript would be in a separate .js file -->
     <script>
         // DOM Elements
         const passwordInput = document.getElementById('password');
@@ -259,7 +281,7 @@
         // Regular Expressions for validation
         const uppercaseRegex = /[A-Z]/;
         const numberRegex = /[0-9]/;
-        const symbolRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        const symbolRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/; // Consider escaping - and ]
 
         let passwordIsValid = false;
 
@@ -273,73 +295,58 @@
                 symbol: symbolRegex.test(password),
             };
 
-            // Update class for length check
             lengthCheck.className = checks.length ? 'valid' : 'invalid';
-            // Update class for uppercase check
             uppercaseCheck.className = checks.uppercase ? 'valid' : 'invalid';
-            // Update class for number check
             numberCheck.className = checks.number ? 'valid' : 'invalid';
-            // Update class for symbol check
             symbolCheck.className = checks.symbol ? 'valid' : 'invalid';
 
-            // Check if all criteria are met
             passwordIsValid = Object.values(checks).every(Boolean);
         };
 
-        // Event listener for real-time password validation
         passwordInput.addEventListener('input', validatePassword);
 
-
-        // Function to display messages
         const showMessage = (text, type) => {
             messageDiv.textContent = text;
-            messageDiv.className = type; // 'success' or 'error'
+            messageDiv.className = type; 
+            messageDiv.style.display = 'block'; // Ensure it's visible
         };
 
-        // Function to handle form submission
         const handleFormSubmit = (event) => {
-            // Prevent the form from submitting by default
             event.preventDefault();
+            validatePassword(); // Ensure validation is run on submit attempt
 
-            // Re-validate on submit, just in case
-            validatePassword();
-
+            const username = document.getElementById('username').value;
             const password = passwordInput.value;
             const confirmPassword = confirmPasswordInput.value;
 
-            // Clear previous messages
             messageDiv.textContent = '';
             messageDiv.className = '';
+            messageDiv.style.display = 'none';
 
-            // --- Validation Checks ---
+
+            if (username.trim() === '') {
+                 showMessage('Username cannot be empty.', 'error');
+                 return false;
+            }
+
             if (!passwordIsValid) {
                 showMessage('Your password does not meet all the requirements.', 'error');
-                return false; // Stop submission
+                passwordInput.focus();
+                return false; 
             }
 
             if (password !== confirmPassword) {
                 showMessage('Passwords do not match. Please try again.', 'error');
-                return false; // Stop submission
+                confirmPasswordInput.focus();
+                return false;
             }
 
-            // --- If All Validation Passes ---
-            showMessage('Registration successful! Redirecting...', 'success');
-
-            // Here, you would typically allow the form to submit to the server.
-            // For this demo, we'll simulate it. In a real app, you would remove
-            // the setTimeout and just call form.submit() or use Fetch API.
+            showMessage('Registration successful! Preparing your account...', 'success');
             
-            // To submit the form programmatically after validation:
-            // form.submit();
-            
-            // Example of a delayed redirect after showing success message
             setTimeout(() => {
-                // This will submit the form to the action specified in the <form> tag
-                // In your case, it will POST to the current URL.
                 form.submit();
-            }, 2000); // Wait 2 seconds before submitting
+            }, 2000); 
         };
-
     </script>
 </body>
 </html>
