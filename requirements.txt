@@ -1,14 +1,13 @@
-# Flask framework and essentials
-Flask
-Flask-Bcrypt  # For password hashing
-Flask-Login   # For user session management
+# Core Dependencies
+Flask==2.3.3
+flask-bcrypt==1.0.1
+flask-login==0.6.3
+pymongo==4.6.1
+dnspython==2.6.1
+gunicorn==21.2.0
 
-# MongoDB interaction
-pymongo[srv]  # Includes driver and SRV record support for Atlas connections
-
-# Note: 'gridfs' and 'bson' are part of the 'pymongo' package
-# Note: 'io', 'datetime', 'traceback', 'logging', 'functools' are Python standard libraries
-
-# Optional: Only needed if your MongoDB connection explicitly requires it
-# and your system/driver doesn't find CA certificates automatically.
-# certifi
+# Optional/Recommended (based on common Flask usage)
+python-dotenv==1.0.1         # For environment variable management via .env
+Flask-Cors==4.0.0            # For handling Cross-Origin Resource Sharing (CORS)
+flask-wtf==1.2.1             # For form handling with CSRF protection
+email-validator==2.1.0.post1 # Required by Flask-WTF for validating email fields
