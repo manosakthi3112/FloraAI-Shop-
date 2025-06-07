@@ -1508,7 +1508,7 @@ def show_bill(order_id):
             'quantity': quantity,
             'price_per_unit_formatted': f"{price_per_unit:.2f}",
             'total_price_formatted': f"{total_price_float:.2f}",
-            'store_name': "MARUTHU FLOWERS", # TODO: Make this configurable?
+            'store_name': "FLORAAI SHOP", # TODO: Make this configurable?
             'thank_you': "Thank you for your order!"
         }
         # app.logger.debug(f"--- [BILL] Data prepared for template: {bill_data} ---")
